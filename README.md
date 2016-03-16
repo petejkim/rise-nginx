@@ -32,9 +32,9 @@ cd ..
 echo 'export PATH="lua_modules/bin:/opt/openresty/luajit/bin:/opt/openresty/nginx/sbin:$PATH"' >> ~/.zshrc
 alias ngx="sudo /opt/openresty/nginx/sbin/nginx -p /opt/openresty -c /opt/openresty/nginx/conf/nginx.conf"
 
-# Create a symlink to this repo's main.lua file
+# Create a symlink to this repo
 cd /opt/openresty/lualib
-sudo ln -s ~/code/rise-nginx/main.lua
+sudo ln -s ~/code/rise-nginx
 
 # Add nginx config (for development only)
 cd ~/code/rise-nginx
