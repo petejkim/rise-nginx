@@ -1,0 +1,23 @@
+#!/opt/openresty/bin/resty
+
+if not ngx then
+  ngx.exit = function() end
+end
+
+package.path =
+  "./?.lua;"..
+  "lua_modules/share/lua/5.1/?.lua;"..
+  "lua_modules/share/lua/5.1/?/init.lua;"..
+  "/opt/openresty/luajit/share/lua/5.1/?.lua;"..
+  "/opt/openresty/luajit/share/lua/5.1/?/init.lua;"..
+  package.path
+
+package.cpath =
+  "lua_modules/lib/lua/5.1/?.so;"..
+  "/opt/openresty/luajit/lib/lua/5.1/?.so;"..
+  package.cpath
+
+local k,l,_=pcall(require,"luarocks.loader") _=k and l.add_context("busted","")
+
+require 'spec/spec_helper'
+require 'busted.runner'({ standalone = false })
