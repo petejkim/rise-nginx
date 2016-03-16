@@ -1,0 +1,11 @@
+rock_manifest = {
+   doc = {
+      ["cliargs.html"] = "69b69a49f005f508250977fdd8663d1f",
+      ["index.html"] = "69b69a49f005f508250977fdd8663d1f",
+      ["lunadoc.css"] = "b467d250ca6283e53420851f3022ef27"
+   },
+   lua = {
+      ["cliargs.lua"] = "bc99cc740d9f48a7863d5622bc927a72"
+   },
+   ["lua_cliargs-2.5-5.rockspec"] = "c22dfd4f18ea6c28d371204700a2912e"
+}

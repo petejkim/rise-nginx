@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec '/opt/openresty/luajit/bin/luajit-2.1.0-beta1' -e 'package.path="/home/nitrous/.luarocks/share/lua/5.1/?.lua;/home/nitrous/.luarocks/share/lua/5.1/?/init.lua;/opt/openresty/luajit/share/lua/5.1/?.lua;/opt/openresty/luajit/share/lua/5.1/?/init.lua;"..package.path; package.cpath="/home/nitrous/.luarocks/lib/lua/5.1/?.so;/opt/openresty/luajit/lib/lua/5.1/?.so;"..package.cpath' -e 'local k,l,_=pcall(require,"luarocks.loader") _=k and l.add_context("busted","2.0.rc11-0")' '/home/nitrous/code/rise-nginx/lua_modules/lib/luarocks/rocks/busted/2.0.rc11-0/bin/busted' "$@"
