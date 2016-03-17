@@ -13,6 +13,7 @@ function domain.get_meta(domain_name)
     method = "GET"
   })
   if err then
+    -- TODO: log this error
     return nil, err
   end
 

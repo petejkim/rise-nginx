@@ -1,5 +1,7 @@
 local config = require('config')
 local domain = require('domain')
+local target = require('target')
+
 local host = ngx.var.host
 
 local meta, err = domain.get_meta(host)
@@ -13,10 +15,13 @@ if not meta.webroot then
   return ngx.exit(404)
 end
 
-ngx.var.target = config.s3_host.."/"..meta.webroot..ngx.var.request_uri
+local webroot_uri = config.s3_host.."/"..meta.webroot
+local target_uri, should_redirect = target.resolve(ngx.var.request_uri, webroot_uri, true)
 
-if string.sub(ngx.var.target, -1) == "/" then
-  ngx.var.target = ngx.var.target.."index.html"
+if should_redirect then
+  return ngx.redirect(target_uri, ngx.HTTP_MOVED_TEMPORARILY)
 end
+
+ngx.var.target = webroot_uri..target_uri
 
 ngx.log(ngx.INFO, "URI: ", ngx.var.scheme.."://"..ngx.var.target)

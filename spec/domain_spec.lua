@@ -7,7 +7,7 @@ describe("domain", function()
     local httpstub
 
     before_each(function()
-      httpstub = {}
+      httpstub = {request_uri=function() end}
       stub(http, 'new', httpstub)
     end)
 
@@ -18,8 +18,10 @@ describe("domain", function()
     context("when metadata json file cannot be fetched", function()
       context("when s3 returns 403", function()
         before_each(function()
-          httpstub.request_uri = function(self, uri)
+          httpstub.request_uri = function(self, uri, opts)
             assert.are.equal(uri, "http://test-s3.example.com/domains/foo-bar-express.rise.cloud/meta.json")
+            assert.is_not_nil(opts)
+            assert.are.equal(opts.method, "GET")
             return {
               status = 403,
               body = ""
@@ -36,8 +38,10 @@ describe("domain", function()
 
       context("when s3 returns some other errorneous response code", function()
         before_each(function()
-          httpstub.request_uri = function(self, uri)
+          httpstub.request_uri = function(self, uri, opts)
             assert.are.equal(uri, "http://test-s3.example.com/domains/foo-bar-express.rise.cloud/meta.json")
+            assert.is_not_nil(opts)
+            assert.are.equal(opts.method, "GET")
             return {
               status = 500,
               body = "<XML>foobar</XML>"
@@ -55,8 +59,10 @@ describe("domain", function()
 
     context("when metadata json file can be fetched successfully", function()
       before_each(function()
-        httpstub.request_uri = function(self, uri)
+        httpstub.request_uri = function(self, uri, opts)
           assert.are.equal(uri, "http://test-s3.example.com/domains/foo-bar-express.rise.cloud/meta.json")
+          assert.is_not_nil(opts)
+          assert.are.equal(opts.method, "GET")
           return {
             status = 200,
             body = '{"webroot": "deployments/bafb79-26/webroot"}'
