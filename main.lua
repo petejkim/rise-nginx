@@ -1,5 +1,4 @@
-require('config')
-
+local config = require('config')
 local domain = require('domain')
 local host = ngx.var.host
 
@@ -14,12 +13,10 @@ if not meta.webroot then
   return ngx.exit(404)
 end
 
-ngx.var.target = _G.CONFIG.s3_host.."/"..meta.webroot
+ngx.var.target = config.s3_host.."/"..meta.webroot..ngx.var.request_uri
 
-if ngx.var.request_uri == "/" then
-  ngx.var.target = ngx.var.target.."/index.html"
-else
-  ngx.var.target = ngx.var.target..ngx.var.request_uri
+if string.sub(ngx.var.target, -1) == "/" then
+  ngx.var.target = ngx.var.target.."index.html"
 end
 
 ngx.log(ngx.INFO, "URI: ", ngx.var.scheme.."://"..ngx.var.target)

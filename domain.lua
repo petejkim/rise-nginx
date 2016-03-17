@@ -1,3 +1,4 @@
+local config = require('config')
 local http = require('resty.http')
 local cjson = require('cjson')
 
@@ -5,7 +6,7 @@ local domain = {}
 
 function domain.get_meta(domain_name)
   -- use http instead of https because metadata does not contain sensitive info anyway
-  local domains_url = "http://".._G.CONFIG.s3_host.."/domains"
+  local domains_url = "http://"..config.s3_host.."/domains"
 
   local httpc = http.new()
   local res, err = httpc:request_uri(domains_url.."/"..domain_name.."/meta.json", {
