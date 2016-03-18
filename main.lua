@@ -1,27 +1,19 @@
-local config = require('config')
-local domain = require('domain')
-local target = require('target')
+local handler = require('handler')
 
-local host = ngx.var.host
+local target, err, err_log = handler.handle(ngx.var.host, ngx.var.request_uri)
 
-local meta, err = domain.get_meta(host)
 if err then
-  ngx.log(ngx.ERR, "Failed to fetch metadata for ", host, "due to ", err)
-  return ngx.exit(404)
+  if not err_log then
+    ngx.log(ngx.ERR, err_log)
+  end
+
+  if err == handler.err_not_found then
+    return ngx.exit(ngx.HTTP_NOT_FOUND)
+  elseif err == handler.err_redirect then
+    return ngx.redirect(target, ngx.HTTP_MOVED_TEMPORARILY)
+  end
+
+  return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 
-if not meta.webroot then
-  ngx.log(ngx.ERR, "'webroot' is not specified for ", host)
-  return ngx.exit(404)
-end
-
-local webroot_uri = config.s3_host.."/"..meta.webroot
-local target_uri, should_redirect = target.resolve(ngx.var.request_uri, webroot_uri, true)
-
-if should_redirect then
-  return ngx.redirect(target_uri, ngx.HTTP_MOVED_TEMPORARILY)
-end
-
-ngx.var.target = webroot_uri..target_uri
-
-ngx.log(ngx.INFO, "URI: ", ngx.var.scheme.."://"..ngx.var.target)
+ngx.var.target = target

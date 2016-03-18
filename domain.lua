@@ -4,7 +4,7 @@ local cjson = require('cjson')
 
 local domain = {}
 
-function domain.get_meta(domain_name)
+function domain.get_meta(domain_name) -- returns (meta, err)
   -- use http instead of https because metadata does not contain sensitive info anyway
   local domains_url = "http://"..config.s3_host.."/domains"
 

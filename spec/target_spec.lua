@@ -1,4 +1,3 @@
-local context = describe
 local target = require('target')
 local http = require('resty.http')
 
@@ -19,9 +18,9 @@ describe("target", function()
         ["/not.png.html"] = true
       }
 
-      local httpstub = {}
-      stub(http, 'new', httpstub)
-      httpstub.request_uri = function(self, uri, opts)
+      local httpc_stub = {}
+      stub(http, 'new', httpc_stub)
+      httpc_stub.request_uri = function(self, uri, opts)
         assert.are.equal(uri:find("http://s3.example.com/web"), 1)
         local uri_sans_webroot = uri:gsub("http://s3.example.com/web", "")
         if remote_fs[uri_sans_webroot] then

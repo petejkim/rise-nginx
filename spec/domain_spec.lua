@@ -1,14 +1,13 @@
-local context = describe
 local domain = require('domain')
 local http = require('resty.http')
 
 describe("domain", function()
   describe(".get_meta", function()
-    local httpstub
+    local httpc_stub
 
     before_each(function()
-      httpstub = {request_uri=function() end}
-      stub(http, 'new', httpstub)
+      httpc_stub = {request_uri=function() end}
+      stub(http, 'new', httpc_stub)
     end)
 
     after_each(function()
@@ -18,7 +17,7 @@ describe("domain", function()
     context("when metadata json file cannot be fetched", function()
       context("when s3 returns 403", function()
         before_each(function()
-          httpstub.request_uri = function(self, uri, opts)
+          httpc_stub.request_uri = function(self, uri, opts)
             assert.are.equal(uri, "http://test-s3.example.com/domains/foo-bar-express.rise.cloud/meta.json")
             assert.is_not_nil(opts)
             assert.are.equal(opts.method, "GET")
@@ -38,7 +37,7 @@ describe("domain", function()
 
       context("when s3 returns some other errorneous response code", function()
         before_each(function()
-          httpstub.request_uri = function(self, uri, opts)
+          httpc_stub.request_uri = function(self, uri, opts)
             assert.are.equal(uri, "http://test-s3.example.com/domains/foo-bar-express.rise.cloud/meta.json")
             assert.is_not_nil(opts)
             assert.are.equal(opts.method, "GET")
@@ -59,13 +58,13 @@ describe("domain", function()
 
     context("when metadata json file can be fetched successfully", function()
       before_each(function()
-        httpstub.request_uri = function(self, uri, opts)
+        httpc_stub.request_uri = function(self, uri, opts)
           assert.are.equal(uri, "http://test-s3.example.com/domains/foo-bar-express.rise.cloud/meta.json")
           assert.is_not_nil(opts)
           assert.are.equal(opts.method, "GET")
           return {
             status = 200,
-            body = '{"webroot": "deployments/bafb79-26/webroot"}'
+            body = '{"prefix": "bafb79-26"}'
           }, nil
         end
       end)
@@ -73,7 +72,7 @@ describe("domain", function()
       it("returns info and no error", function()
         j, err = domain.get_meta("foo-bar-express.rise.cloud")
         assert.is_nil(err)
-        assert.are.same(j, { webroot = "deployments/bafb79-26/webroot" })
+        assert.are.same(j, { prefix = "bafb79-26" })
       end)
     end)
   end)
