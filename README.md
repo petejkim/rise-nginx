@@ -11,9 +11,9 @@ wget http://mirrors.kernel.org/ubuntu/pool/main/o/openssl/openssl_1.0.2g-1ubuntu
 sudo dpkg -i libssl1.0.0_1.0.2g-1ubuntu2_amd64.deb libssl-dev_1.0.2g-1ubuntu2_amd64.deb openssl_1.0.2g-1ubuntu2_amd64.deb
 
 # Install OpenResty
-wget https://openresty.org/download/openresty-1.9.7.3.tar.gz
-tar xvzf openresty-1.9.7.3.tar.gz
-cd openresty-1.9.7.3
+wget https://openresty.org/download/openresty-1.9.7.4.tar.gz
+tar xvzf openresty-1.9.7.4.tar.gz
+cd openresty-1.9.7.4
 ./configure --prefix=/opt/openresty  --with-pcre-jit --with-ipv6 -j4
 make -j4
 sudo make install
