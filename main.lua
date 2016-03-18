@@ -16,5 +16,5 @@ if err then
   return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 
-ngx.var.prefix = prefix
-ngx.var.target = target
+ngx.var.rise_prefix = prefix
+ngx.var.rise_target = target
