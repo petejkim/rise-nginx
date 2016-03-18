@@ -1,5 +1,3 @@
-local context = describe
-local config = require('config')
 local http = require('resty.http')
 
 local target = {}
@@ -20,7 +18,7 @@ function target.resolve(path, webroot, drop_dot_html) -- returns (target_path, s
 
     -- if path ends with ".html"
     if string.sub(path, -5) == ".html" then
-      path_sans_html = string.sub(path, 1, -6)
+      local path_sans_html = string.sub(path, 1, -6)
       -- check whether there exists a file without the ".html" extension
       res, err = httpc:request_uri("http://"..webroot..path_sans_html, { method = "HEAD" })
       if err then

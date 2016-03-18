@@ -4,6 +4,8 @@ local domain = require('domain')
 local target = require('target')
 local Dict = require("spec/support/fake_shared_dict")
 
+local stub_fn, unstub_fn = _G.stub_fn, _G.unstub_fn
+
 describe("handler", function()
   local cache
 

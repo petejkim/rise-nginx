@@ -8,9 +8,9 @@ _G.stub_fn = function(table, fn_name, fn)
   if type(orig_fn) == "function" then
     table[fn_name.."_orig"] = orig_fn
     fn = fn or function() end
-    local spy = spy.new(fn)
-    table[fn_name] = spy
-    return spy
+    local s = spy.new(fn)
+    table[fn_name] = s
+    return s
   end
   return nil
 end

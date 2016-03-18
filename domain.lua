@@ -23,8 +23,8 @@ function domain.get_meta(domain_name) -- returns (meta, err)
     return nil, res.status.." "..res.body
   end
 
-  local j
-  local ok, err = pcall(function()
+  local j, ok
+  ok, err = pcall(function()
     j = cjson.decode(res.body)
   end)
 
