@@ -39,9 +39,10 @@ describe("handler", function()
       end)
 
       it("fetches meta.json to obtain prefix and caches prefix, target and should_redirect", function()
-        local t, err, err_log = handler.handle("foo-bar-express.rise.cloud", "/")
+        local pfx, tgt, err, err_log = handler.handle("foo-bar-express.rise.cloud", "/")
 
-        assert.are.equal(t, config.s3_host.."/deployments/a1b2c3-123/webroot/index.html")
+        assert.are.equal(pfx, "a1b2c3-123")
+        assert.are.equal(tgt, config.s3_host.."/deployments/a1b2c3-123/webroot/index.html")
         assert.is_nil(err)
         assert.is_nil(err_log)
 
@@ -65,9 +66,10 @@ describe("handler", function()
         cache:set("x0y1z2-012:/foo:tgt", "/foo/")
         cache:set("x0y1z2-012:/foo:rdr", true)
 
-        local t, err, err_log = handler.handle("foo-bar-express.rise.cloud", "/foo")
+        local pfx, tgt, err, err_log = handler.handle("foo-bar-express.rise.cloud", "/foo")
 
-        assert.are.equal(t, "/foo/")
+        assert.are.equal(pfx, "x0y1z2-012")
+        assert.are.equal(tgt, "/foo/")
         assert.are_equal(err, handler.err_redirect)
         assert.is_nil(err_log)
 

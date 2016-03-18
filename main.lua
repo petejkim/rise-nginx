@@ -1,6 +1,6 @@
 local handler = require('handler')
 
-local target, err, err_log = handler.handle(ngx.var.host, ngx.var.request_uri)
+local prefix, target, err, err_log = handler.handle(ngx.var.host, ngx.var.request_uri)
 
 if err then
   if not err_log then
@@ -16,4 +16,5 @@ if err then
   return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 
+ngx.var.prefix = prefix
 ngx.var.target = target
