@@ -1,5 +1,12 @@
 local Dict = {store={}}
 
+local allowed_types = {
+  ["string"] = true,
+  ["boolean"] = true,
+  ["number"] = true,
+  ["nil"] = true
+}
+
 function Dict:new(d)
   d = d or {}
   setmetatable(d, self)
@@ -12,8 +19,7 @@ function Dict:get(key)
 end
 
 function Dict:set(key, val)
-  local val_t = type(val)
-  if val_t == "string" or val_t == "boolean" or val_t == "number" or val_t == "nil" then
+  if allowed_types[type(val)] then
     self.store[key] = val
     return true, nil
   end
