@@ -1,0 +1,463 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Command line interface &mdash; luacheck 0.14.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="luacheck 0.14.0 documentation" href="index.html"/>
+        <link rel="next" title="Configuration file" href="config.html"/>
+        <link rel="prev" title="List of warnings" href="warnings.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> luacheck
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.14.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="warnings.html">List of warnings</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Command line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#command-line-options">Command line options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#patterns">Patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sets-of-standard-globals">Sets of standard globals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#formatters">Formatters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#caching">Caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stable-interface-for-editor-plugins-and-tools">Stable interface for editor plugins and tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inline.html">Inline options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module.html">Luacheck module</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">luacheck</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Command line interface</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/cli.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="command-line-interface">
+<h1>Command line interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal"><span class="pre">luacheck</span></code> program accepts files, directories and <a class="reference external" href="http://www.luarocks.org/en/Rockspec_format">rockspecs</a> as arguments. They can be filtered using <code class="docutils literal"><span class="pre">--include-files</span></code> and <code class="docutils literal"><span class="pre">--exclude-files</span></code> options, see below.</p>
+<ul class="simple">
+<li>Given a file, <code class="docutils literal"><span class="pre">luacheck</span></code> will check it.</li>
+<li>Given <code class="docutils literal"><span class="pre">-</span></code>, <code class="docutils literal"><span class="pre">luacheck</span></code> will check stdin.</li>
+<li>Given a directory, <code class="docutils literal"><span class="pre">luacheck</span></code> will check all files within it, selecting only files with <code class="docutils literal"><span class="pre">.lua</span></code> extension unless <code class="docutils literal"><span class="pre">--include-files</span></code> option is used. This feature requires <a class="reference external" href="http://keplerproject.github.io/luafilesystem/">LuaFileSystem</a> (installed automatically if LuaRocks was used to install Luacheck).</li>
+<li>Given a rockspec (a file with <code class="docutils literal"><span class="pre">.rockspec</span></code> extension), <code class="docutils literal"><span class="pre">luacheck</span></code> will check all files with <code class="docutils literal"><span class="pre">.lua</span></code> extension mentioned in the rockspec in <code class="docutils literal"><span class="pre">build.install.lua</span></code>, <code class="docutils literal"><span class="pre">build.install.bin</span></code> and <code class="docutils literal"><span class="pre">build.modules</span></code> tables.</li>
+</ul>
+<p>The output of <code class="docutils literal"><span class="pre">luacheck</span></code> consists of separate reports for each checked file and ends with a summary:</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>$ luacheck src
+Checking src/bad_code.lua                         5 warnings
+
+    src/bad_code.lua:3:16: unused variable helper
+    src/bad_code.lua:3:23: unused variable length argument
+    src/bad_code.lua:7:10: setting non-standard global variable embrace
+    src/bad_code.lua:8:10: variable opt was previously defined as an argument on line 7
+    src/bad_code.lua:9:11: accessing undefined variable hepler
+
+Checking src/good_code.lua                        OK
+Checking src/python_code.lua                      1 error
+
+    src/python_code.lua:1:6: expected &#39;=&#39; near &#39;__future__&#39;
+
+Checking src/unused_code.lua                      9 warnings
+
+    src/unused_code.lua:3:18: unused argument baz
+    src/unused_code.lua:4:8: unused loop variable i
+    src/unused_code.lua:5:13: unused variable q
+    src/unused_code.lua:7:11: unused loop variable a
+    src/unused_code.lua:7:14: unused loop variable b
+    src/unused_code.lua:7:17: unused loop variable c
+    src/unused_code.lua:13:7: value assigned to variable x is unused
+    src/unused_code.lua:14:1: value assigned to variable x is unused
+    src/unused_code.lua:22:1: value assigned to variable z is unused
+
+Total: 14 warnings / 1 error in 4 files
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">luacheck</span></code> exits with 0 if no warnings or errors occured and with a positive number otherwise.</p>
+<div class="section" id="command-line-options">
+<span id="cliopts"></span><h2>Command line options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h2>
+<p>Short options that do not take an argument can be combined into one, so that <code class="docutils literal"><span class="pre">-qqu</span></code> is equivalent to <code class="docutils literal"><span class="pre">-q</span> <span class="pre">-q</span> <span class="pre">-u</span></code>. For long options, both <code class="docutils literal"><span class="pre">--option</span> <span class="pre">value</span></code> or <code class="docutils literal"><span class="pre">--option=value</span></code> can be used.</p>
+<p>Options taking several arguments can be used several times; <code class="docutils literal"><span class="pre">--ignore</span> <span class="pre">foo</span> <span class="pre">--ignore</span> <span class="pre">bar</span></code> is equivalent to <code class="docutils literal"><span class="pre">--ignore</span> <span class="pre">foo</span> <span class="pre">bar</span></code>.</p>
+<p>Note that options that may take several arguments, such as <code class="docutils literal"><span class="pre">--globals</span></code>, should not be used immediately before positional arguments; given <code class="docutils literal"><span class="pre">--globals</span> <span class="pre">foo</span> <span class="pre">bar</span> <span class="pre">file.lua</span></code>, <code class="docutils literal"><span class="pre">luacheck</span></code> will consider all <code class="docutils literal"><span class="pre">foo</span></code>, <code class="docutils literal"><span class="pre">bar</span></code> and <code class="docutils literal"><span class="pre">file.lua</span></code> global and then panic as there are no file names left.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="76%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Option</th>
+<th class="head">Meaning</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-g</span> <span class="pre">|</span> <span class="pre">--no-global</span></code></td>
+<td>Filter out warnings related to global variables.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-u</span> <span class="pre">|</span> <span class="pre">--no-unused</span></code></td>
+<td>Filter out warnings related to unused variables and values.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-r</span> <span class="pre">|</span> <span class="pre">--no-redefined</span></code></td>
+<td>Filter out warnings related to redefined variables.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-a</span> <span class="pre">|</span> <span class="pre">--no-unused-args</span></code></td>
+<td>Filter out warnings related to unused arguments and loop variables.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-s</span> <span class="pre">|</span> <span class="pre">--no-unused-secondaries</span></code></td>
+<td><p class="first">Filter out warnings related to unused variables set together with used ones.</p>
+<p class="last">See <a class="reference internal" href="warnings.html#secondaryvaluesandvariables"><span>Secondary values and variables</span></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--no-self</span></code></td>
+<td>Filter out warnings related to implicit <code class="docutils literal"><span class="pre">self</span></code> argument.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--std</span> <span class="pre">&lt;std&gt;</span></code></td>
+<td><p class="first">Set standard globals. <code class="docutils literal"><span class="pre">&lt;std&gt;</span></code> can be one of:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">_G</span></code> - globals of the Lua interpreter <code class="docutils literal"><span class="pre">luacheck</span></code> runs on (default);</li>
+<li><code class="docutils literal"><span class="pre">lua51</span></code> - globals of Lua 5.1;</li>
+<li><code class="docutils literal"><span class="pre">lua52</span></code> - globals of Lua 5.2;</li>
+<li><code class="docutils literal"><span class="pre">lua52c</span></code> - globals of Lua 5.2 compiled with LUA_COMPAT_ALL;</li>
+<li><code class="docutils literal"><span class="pre">lua53</span></code> - globals of Lua 5.3;</li>
+<li><code class="docutils literal"><span class="pre">lua53c</span></code> - globals of Lua 5.3 compiled with LUA_COMPAT_5_2;</li>
+<li><code class="docutils literal"><span class="pre">luajit</span></code> - globals of LuaJIT 2.0;</li>
+<li><code class="docutils literal"><span class="pre">ngx_lua</span></code> - globals of Openresty <a class="reference external" href="https://github.com/openresty/lua-nginx-module">lua-nginx-module</a> with LuaJIT 2.0;</li>
+<li><code class="docutils literal"><span class="pre">min</span></code> - intersection of globals of Lua 5.1, Lua 5.2 and LuaJIT 2.0;</li>
+<li><code class="docutils literal"><span class="pre">max</span></code> - union of globals of Lua 5.1, Lua 5.2 and LuaJIT 2.0;</li>
+<li><code class="docutils literal"><span class="pre">busted</span></code> - globals added by Busted 2.0;</li>
+<li><code class="docutils literal"><span class="pre">none</span></code> - no standard globals.</li>
+</ul>
+<p class="last">See <a class="reference internal" href="#stds"><span>Sets of standard globals</span></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--globals</span> <span class="pre">[&lt;global&gt;]</span> <span class="pre">...</span></code></td>
+<td>Add custom globals on top of standard ones.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--read-globals</span> <span class="pre">[&lt;global&gt;]</span> <span class="pre">...</span></code></td>
+<td>Add read-only globals.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--new-globals</span> <span class="pre">[&lt;global&gt;]</span> <span class="pre">...</span></code></td>
+<td>Set custom globals. Removes custom globals added previously.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--new-read-globals</span> <span class="pre">[&lt;global&gt;]</span> <span class="pre">...</span></code></td>
+<td>Set read-only globals. Removes read-only globals added previously.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-c</span> <span class="pre">|</span> <span class="pre">--compat</span></code></td>
+<td>Equivalent to <code class="docutils literal"><span class="pre">--std</span> <span class="pre">max</span></code>.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-d</span> <span class="pre">|</span> <span class="pre">--allow-defined</span></code></td>
+<td><p class="first">Allow defining globals implicitly by setting them.</p>
+<p class="last">See <a class="reference internal" href="warnings.html#implicitlydefinedglobals"><span>Implicitly defined globals</span></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-t</span> <span class="pre">|</span> <span class="pre">--allow-defined-top</span></code></td>
+<td><p class="first">Allow defining globals implicitly by setting them in the top level scope.</p>
+<p class="last">See <a class="reference internal" href="warnings.html#implicitlydefinedglobals"><span>Implicitly defined globals</span></a></p>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-m</span> <span class="pre">|</span> <span class="pre">--module</span></code></td>
+<td><p class="first">Limit visibility of implicitly defined globals to their files.</p>
+<p class="last">See <a class="reference internal" href="warnings.html#modules"><span>Modules</span></a></p>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--ignore</span> <span class="pre">|</span> <span class="pre">-i</span> <span class="pre">&lt;patt&gt;</span> <span class="pre">[&lt;patt&gt;]</span> <span class="pre">...</span></code></td>
+<td>Filter out warnings matching patterns.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--enable</span> <span class="pre">|</span> <span class="pre">-e</span> <span class="pre">&lt;patt&gt;</span> <span class="pre">[&lt;patt&gt;]</span> <span class="pre">...</span></code></td>
+<td>Do not filter out warnings matching patterns.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--only</span> <span class="pre">|</span> <span class="pre">-o</span> <span class="pre">&lt;patt&gt;</span> <span class="pre">[&lt;patt&gt;]</span> <span class="pre">...</span></code></td>
+<td>Filter out warnings not matching patterns.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--no-inline</span></code></td>
+<td>Disable inline options.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--config</span> <span class="pre">&lt;config&gt;</span></code></td>
+<td>Path to custom configuration file (default: <code class="docutils literal"><span class="pre">.luacheckrc</span></code>).</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--no-config</span></code></td>
+<td>Do not look up custom configuration file.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--filename</span> <span class="pre">&lt;filename&gt;</span></code></td>
+<td>Use another filename in output, for selecting
+configuration overrides and for file filtering.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--exclude-files</span> <span class="pre">&lt;glob&gt;</span> <span class="pre">[&lt;glob&gt;]</span> <span class="pre">...</span></code></td>
+<td>Do not check files matching these globbing patterns. Recursive globs such as <code class="docutils literal"><span class="pre">**/*.lua</span></code> are supported.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--include-files</span> <span class="pre">&lt;glob&gt;</span> <span class="pre">[&lt;glob&gt;]</span> <span class="pre">...</span></code></td>
+<td>Do not check files not matching these globbing patterns.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--cache</span> <span class="pre">[&lt;cache&gt;]</span></code></td>
+<td>Path to cache file. (default: <code class="docutils literal"><span class="pre">.luacheckcache</span></code>). See <a class="reference internal" href="#cache"><span>Caching</span></a></td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--no-cache</span></code></td>
+<td>Do not use cache.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-j</span> <span class="pre">|</span> <span class="pre">--jobs</span></code></td>
+<td>Check <code class="docutils literal"><span class="pre">&lt;jobs&gt;</span></code> files in parallel. Requires <a class="reference external" href="http://cmr.github.io/lanes/">LuaLanes</a>.
+Default number of jobs is set to number of available processing units.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--formatter</span> <span class="pre">&lt;formatter&gt;</span></code></td>
+<td><p class="first">Use custom formatter. <code class="docutils literal"><span class="pre">&lt;formatter&gt;</span></code> must be a module name or one of:</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">TAP</span></code> - Test Anything Protocol formatter;</li>
+<li><code class="docutils literal"><span class="pre">JUnit</span></code> - JUnit XML formatter;</li>
+<li><code class="docutils literal"><span class="pre">plain</span></code> - simple warning-per-line formatter;</li>
+<li><code class="docutils literal"><span class="pre">default</span></code> - standard formatter.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-q</span> <span class="pre">|</span> <span class="pre">--quiet</span></code></td>
+<td><p class="first">Suppress report output for files without warnings.</p>
+<ul class="last simple">
+<li><code class="docutils literal"><span class="pre">-qq</span></code> - Suppress output of warnings.</li>
+<li><code class="docutils literal"><span class="pre">-qqq</span></code> - Only output summary.</li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--codes</span></code></td>
+<td>Show warning codes.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">--ranges</span></code></td>
+<td>Show ranges of columns related to warnings.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">--no-color</span></code></td>
+<td>Do not colorize output.</td>
+</tr>
+<tr class="row-even"><td><code class="docutils literal"><span class="pre">-v</span> <span class="pre">|</span> <span class="pre">--version</span></code></td>
+<td>Show version of Luacheck and its dependencies and exit.</td>
+</tr>
+<tr class="row-odd"><td><code class="docutils literal"><span class="pre">-h</span> <span class="pre">|</span> <span class="pre">--help</span></code></td>
+<td>Show help and exit.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="patterns">
+<span id="id1"></span><h2>Patterns<a class="headerlink" href="#patterns" title="Permalink to this headline">¶</a></h2>
+<p>CLI options <code class="docutils literal"><span class="pre">--ignore</span></code>, <code class="docutils literal"><span class="pre">--enable</span></code> and <code class="docutils literal"><span class="pre">--only</span></code> and corresponding config options allow filtering warnings using pattern matching on warning codes, variable names or both. If a pattern contains a slash, the part before slash matches warning code and the part after matches variable name. Otherwise, if a pattern contains a letter or underscore, it matches variable name. Otherwise, it matches warning code. E.g.:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Pattern</th>
+<th class="head">Matching warnings</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>4.2</td>
+<td>Shadowing declarations of arguments or redefining them.</td>
+</tr>
+<tr class="row-odd"><td>.*_</td>
+<td>Warnings related to variables with <code class="docutils literal"><span class="pre">_</span></code> suffix.</td>
+</tr>
+<tr class="row-even"><td>4.2/.*_</td>
+<td>Shadowing declarations of arguments with <code class="docutils literal"><span class="pre">_</span></code> suffix or redefining them.</td>
+</tr>
+</tbody>
+</table>
+<p>Unless already anchored, patterns matching variable names are anchored at both sides and patterns matching warning codes are anchored at their beginnings. This allows one to filter warnings by category (e.g. <code class="docutils literal"><span class="pre">--only</span> <span class="pre">1</span></code> focuses <code class="docutils literal"><span class="pre">luacheck</span></code> on global-related warnings).</p>
+</div>
+<div class="section" id="sets-of-standard-globals">
+<span id="stds"></span><h2>Sets of standard globals<a class="headerlink" href="#sets-of-standard-globals" title="Permalink to this headline">¶</a></h2>
+<p>CLI option <code class="docutils literal"><span class="pre">--stds</span></code> allows combining built-in sets described above using <code class="docutils literal"><span class="pre">+</span></code>. For example, <code class="docutils literal"><span class="pre">--std</span> <span class="pre">max</span></code> is equivalent to <code class="docutils literal"><span class="pre">--std=lua51+lua52+lua53</span></code>. Leading plus sign adds new sets to default one instead of replacing it. For instance, <code class="docutils literal"><span class="pre">--std</span> <span class="pre">+busted</span></code> is suitable for checking test files that use <a class="reference external" href="http://olivinelabs.com/busted/">Busted</a> testing framework. Custom sets of globals can be defined by mutating global variable <code class="docutils literal"><span class="pre">stds</span></code> in config. See <a class="reference internal" href="config.html#custom-stds"><span>Custom sets of globals</span></a></p>
+</div>
+<div class="section" id="formatters">
+<h2>Formatters<a class="headerlink" href="#formatters" title="Permalink to this headline">¶</a></h2>
+<p>CLI option <code class="docutils literal"><span class="pre">--formatter</span></code> allows selecting a custom formatter for <code class="docutils literal"><span class="pre">luacheck</span></code> output. A custom formatter is a Lua module returning a function with three arguments: report as returned by <code class="docutils literal"><span class="pre">luacheck</span></code> module (see <a class="reference internal" href="module.html#report"><span>Report format</span></a>), array of file names and table of options. Options contain values assigned to <code class="docutils literal"><span class="pre">quiet</span></code>, <code class="docutils literal"><span class="pre">color</span></code>, <code class="docutils literal"><span class="pre">limit</span></code>, <code class="docutils literal"><span class="pre">codes</span></code>, <code class="docutils literal"><span class="pre">ranges</span></code> and <code class="docutils literal"><span class="pre">formatter</span></code> options in CLI or config. Formatter function must return a string.</p>
+</div>
+<div class="section" id="caching">
+<span id="cache"></span><h2>Caching<a class="headerlink" href="#caching" title="Permalink to this headline">¶</a></h2>
+<p>If LuaFileSystem is available, Luacheck can cache results of checking files. On subsequent checks, only files which have changed since the last check will be rechecked, improving run time significantly. Changing options (e.g. defining additional globals) does not invalidate cache. Caching can be enabled by using <code class="docutils literal"><span class="pre">--cache</span> <span class="pre">&lt;cache&gt;</span></code> option or <code class="docutils literal"><span class="pre">cache</span></code> config option. Using <code class="docutils literal"><span class="pre">--cache</span></code> without an argument or setting <code class="docutils literal"><span class="pre">cache</span></code> config option to <code class="docutils literal"><span class="pre">true</span></code> sets <code class="docutils literal"><span class="pre">.luacheckcache</span></code> as the cache file. Note that <code class="docutils literal"><span class="pre">--cache</span></code> must be used every time <code class="docutils literal"><span class="pre">luacheck</span></code> is run, not on the first run only.</p>
+</div>
+<div class="section" id="stable-interface-for-editor-plugins-and-tools">
+<h2>Stable interface for editor plugins and tools<a class="headerlink" href="#stable-interface-for-editor-plugins-and-tools" title="Permalink to this headline">¶</a></h2>
+<p>Command-line interface of Luacheck can change between minor releases. Starting from 0.11.0 version, the following interface is guaranteed at least till 1.0.0 version, and should be used by tools using Luacheck output, e.g. editor plugins.</p>
+<ul class="simple">
+<li>Luacheck should be started from the directory containing the checked file.</li>
+<li>File can be passed through stdin using <code class="docutils literal"><span class="pre">-</span></code> as argument or using a temporary file. Real filename should be passed using <code class="docutils literal"><span class="pre">--filename</span></code> option.</li>
+<li>Plain formatter should be used. It outputs one issue (warning or error) per line.</li>
+<li>To get precise error location, <code class="docutils literal"><span class="pre">--ranges</span></code> option can be used. Each line starts with real filename (passed using <code class="docutils literal"><span class="pre">--filename</span></code>), followed by <code class="docutils literal"><span class="pre">:&lt;line&gt;:&lt;start_column&gt;-&lt;end_column&gt;:</span></code>, where <code class="docutils literal"><span class="pre">&lt;line&gt;</span></code> is line number on which issue occurred and <code class="docutils literal"><span class="pre">&lt;start_column&gt;-&lt;end_column&gt;</span></code> is inclusive range of columns of token related to issue. Numbering starts from 1. If <code class="docutils literal"><span class="pre">--ranges</span></code> is not used, end column and dash is not printed.</li>
+<li>To get warning and error codes, <code class="docutils literal"><span class="pre">--codes</span></code> option can be used. For each line, substring between parentheses contains three digit issue code, prefixed with <code class="docutils literal"><span class="pre">E</span></code> for errors and <code class="docutils literal"><span class="pre">W</span></code> for warnings. Lack of such substring indicates a fatal error (e.g. I/O error).</li>
+<li>The rest of the line is warning message.</li>
+</ul>
+<p>If compatibility with older Luacheck version is desired, output of <code class="docutils literal"><span class="pre">luacheck</span> <span class="pre">--help</span></code> can be used to get its version. If it contains string <code class="docutils literal"><span class="pre">0.&lt;minor&gt;.&lt;patch&gt;</span></code>, where <code class="docutils literal"><span class="pre">&lt;minor&gt;</span></code> is at least 11 and <code class="docutils literal"><span class="pre">patch</span></code> is any number, interface described above should be used.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="config.html" class="btn btn-neutral float-right" title="Configuration file" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="warnings.html" class="btn btn-neutral" title="List of warnings" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2016, Peter Melnichenko.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.14.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

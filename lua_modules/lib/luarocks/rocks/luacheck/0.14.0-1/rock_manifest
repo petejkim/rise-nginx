@@ -1,0 +1,201 @@
+rock_manifest = {
+   bin = {
+      luacheck = "bf4b18b9159fcfc3d3d68699f1c5d3d1"
+   },
+   doc = {
+      [".buildinfo"] = "59ac96b7d612ddb72095dd1c8b48c142",
+      [".doctrees"] = {
+         ["cli.doctree"] = "22dd07bcf78693c7d0826a2f46e65f38",
+         ["config.doctree"] = "684e14f0dc505988976d4a9ef17f16a0",
+         ["environment.pickle"] = "f861f5a9d07bd3e0d6351b2f6ac5dac1",
+         ["index.doctree"] = "b1a8fdf9121b1d7f121f6ccea6018a52",
+         ["inline.doctree"] = "976194910cc7ea8046825b13cd16d86d",
+         ["module.doctree"] = "fc56f2595e225379acc174a71cb6770b",
+         ["warnings.doctree"] = "573c09f7444c3b0d03e52c60a9a92e9d"
+      },
+      _sources = {
+         ["cli.txt"] = "88156804b75268bef1dbf6bf50f92545",
+         ["config.txt"] = "882838a521e5e718195a849e7f149632",
+         ["index.txt"] = "5238722f841289c3efc184ea2e7eb351",
+         ["inline.txt"] = "1d9875542331e679958c6a8032f3a344",
+         ["module.txt"] = "2667613ffac742991afc3ab6be4bb9a5",
+         ["warnings.txt"] = "6c75c6e1b75220caa2838265bbde59c6"
+      },
+      _static = {
+         ["ajax-loader.gif"] = "ae6667053ad118020b8e68ccf307b519",
+         ["basic.css"] = "ee0e59fd9ed7805a6b8b5973d53cb180",
+         ["comment-bright.png"] = "0c850bb4920b581bf5e5dba5fa493a64",
+         ["comment-close.png"] = "2635dda49c823e8122d4d11ed385f33d",
+         ["comment.png"] = "882e40f3d6a16c6ed35659b105251525",
+         css = {
+            ["badge_only.css"] = "0f15a588dd2e51cd756d0fc4ff567123",
+            ["theme.css"] = "7a539308267cffcf51d6327d923cc577"
+         },
+         ["doctools.js"] = "bddd64d603f00bb6e196bf94c6cf3978",
+         ["down-pressed.png"] = "71f5c3a4c398f4fe22a9494fdf7a0192",
+         ["down.png"] = "6bcc489d1138b05d8bd82273fa63a6d2",
+         ["file.png"] = "bcf7eb06f6c72f1cf23eeefe71195e63",
+         fonts = {
+            ["Inconsolata-Bold.ttf"] = "e156a118727053f0f6072d0ee05a48eb",
+            ["Inconsolata-Regular.ttf"] = "631f4ecd69f75ecc4c543b38da8f1b9c",
+            ["Lato-Bold.ttf"] = "44dfe8cc676882243911a3197a50169e",
+            ["Lato-Regular.ttf"] = "7f690e503a254e0b8349aec0177e07aa",
+            ["RobotoSlab-Bold.ttf"] = "d63ef23299458362f3edbf6cd8c2c510",
+            ["RobotoSlab-Regular.ttf"] = "1ec06eed11bbcb1ee510b8f3522adea8",
+            ["fontawesome-webfont.eot"] = "7149833697a959306ec3012a8588dcfa",
+            ["fontawesome-webfont.svg"] = "65bcbc899f379216109acd0b6c494618",
+            ["fontawesome-webfont.ttf"] = "c4668ed2440df82d3fd2f8be9d31d07d",
+            ["fontawesome-webfont.woff"] = "d95d6f5d5ab7cfefd09651800b69bd54"
+         },
+         ["jquery-1.11.1.js"] = "3d93b072d14f2bd1ede58f4847f537fd",
+         ["jquery.js"] = "8101d596b2b8fa35fe3a634ea342d7c3",
+         js = {
+            ["modernizr.min.js"] = "42306a279a9e831515347ae319181cd1",
+            ["theme.js"] = "38618d398f5bdbadb82d53215f681bd7"
+         },
+         ["minus.png"] = "611d6118f1968c8bd445ef0e1a845e92",
+         ["plus.png"] = "90680331edb32156fe420df2ec7fb04e",
+         ["pygments.css"] = "4b16d8712689b328a05bcaf8185cfbcc",
+         ["searchtools.js"] = "7e6b0c9e2101780129236299138aa014",
+         ["underscore-1.3.1.js"] = "4eb64db36175fefa3e36b9e57606512c",
+         ["underscore.js"] = "b538b8a3ed2c5519b19409eace25c38b",
+         ["up-pressed.png"] = "b40e1299cd69ebd73f81d66b09f4b271",
+         ["up.png"] = "312cfdc6fc45b7154332238f1950ffff",
+         ["websupport.js"] = "61952dd30636397d19b691a46cc70cff"
+      },
+      ["cli.html"] = "330f75186ee3e5b83d069196ce1e5cac",
+      ["config.html"] = "f5a56cc15a04d3d1550dfd1464b9299f",
+      ["genindex.html"] = "cc8024f16beee1eb81744fc05c141b00",
+      ["index.html"] = "633eeedb1010c78d526557ec985df912",
+      ["inline.html"] = "2bbc3f45aea8fd643a0270987d49c8b4",
+      ["module.html"] = "fb55897e48a16c92740c20e7727bc586",
+      ["objects.inv"] = "c6a62fae89ca2b2bf5a935c381336838",
+      ["search.html"] = "85d3975ae9e671d451ae00f2340140df",
+      ["searchindex.js"] = "60f327784e21ea06362d773419fe11fd",
+      ["warnings.html"] = "89a993e8e3d2ae5ba677a7fceafcfd00"
+   },
+   lua = {
+      luacheck = {
+         ["analyze.lua"] = "78e7ca46290b30dd42f7b23ed5ba3f5c",
+         ["argparse.lua"] = "ac2abe59a46acef9afab995a3373db0a",
+         ["cache.lua"] = "741ec9e4278ab93015eb7fd8802cde84",
+         ["check.lua"] = "9160656d5eafd418422bcd71cabda18e",
+         ["config.lua"] = "e0f9a39fbdebbe9e29fce263b795460c",
+         ["core_utils.lua"] = "07137596cf554381ddce53715658bc29",
+         ["expand_rockspec.lua"] = "236d56d7872954dcf06990c2bdc5cfcc",
+         ["filter.lua"] = "0c74b447f3b453c0bd8cc146b6f4d3e2",
+         ["format.lua"] = "f9f49c18bb7a3c411daf4731f47a726f",
+         ["fs.lua"] = "b486e06bcc1fa2cba9c613ab0bdacf7a",
+         ["globbing.lua"] = "5407163fdb41174e3698f2d48301b7c7",
+         ["init.lua"] = "be7692cc53f1eed0d36f7461572336b6",
+         ["inline_options.lua"] = "3e2704591f15f9cdcfb95e35d9534774",
+         ["lexer.lua"] = "0d90c64c21cf8dcf0314f274bc478090",
+         ["linearize.lua"] = "35c317f4e9118373bea2de914b95f140",
+         ["main.lua"] = "1c12916c318982ae41882666ee49310b",
+         ["multithreading.lua"] = "2947ad031ef1c69f60042f7cc43722b1",
+         ["options.lua"] = "1e7f384d1aae3dfd1bf3eb22d0d8a8a5",
+         ["parser.lua"] = "cc8271d95079507ccbaa52b13347070e",
+         ["reachability.lua"] = "ccc23be7ab97cfc6c451ddecdb032b79",
+         ["stds.lua"] = "169a4fb71ffa94ea6f0f7365b5aff6e6",
+         ["utils.lua"] = "196a0b72ff5765112ec1063ed8d18880",
+         ["version.lua"] = "8c1c3c09c99cc220fc3cba77cf4509b9"
+      }
+   },
+   ["luacheck-0.14.0-1.rockspec"] = "04db894fb430aee9cde3781ac5bc740b",
+   spec = {
+      ["analyze_spec.lua"] = "60f30834a3d495a0fdc4c4e1c4698fa2",
+      ["cache_spec.lua"] = "fb0c386c87276de3610a22c201684313",
+      caches = {
+         ["bad_lines.cache"] = "6deef94bdbd3f3b617b5860edda9936e",
+         ["bad_mtime.cache"] = "36f1d8ee609b7b4b4f8764a1c9c4794a",
+         ["bad_result.cache"] = "a74bafc821c3fa7880806b8fabf2b529",
+         ["bad_result2.cache"] = "7dad7d8fe73d023e083908369bb20f07",
+         ["different_format.cache"] = "ef20c75de6c924e28e9c574007a39d08",
+         ["old_format.cache"] = "d5190a5e647269a382ece3160f4a153e"
+      },
+      ["check_spec.lua"] = "645e71b189606a3d98c12059255bebcd",
+      ["cli_spec.lua"] = "963e92bd2765c55ed4a71a41b5d3fe5e",
+      ["config_spec.lua"] = "4000472f2943c4964a2b8c7b942f19a4",
+      configs = {
+         ["bad_config.luacheckrc"] = "36a1527796975e0a8a7d8534e5733ace",
+         ["cli_override_config.luacheckrc"] = "49cf3af6d53b29f9e44610d8ca431598",
+         ["cli_override_file_config.luacheckrc"] = "e926796f93323d2616838bf243f902fd",
+         ["cli_specific_config.luacheckrc"] = "f3e6e204453b8f8332fbb2a7d405f791",
+         ["config.lua"] = "5445196c28cdbdeee974c26fb03ebb89",
+         ["custom_stds_config.luacheckrc"] = "4a3c30a0be88adb9dbae617b271af7fb",
+         ["exclude_files_config.luacheckrc"] = "1240eaed7829bc9b5d66765eba6fe4b1",
+         ["global_config.luacheckrc"] = "4167283d5c02051ea50df09357f86fdd",
+         ["import_config.luacheckrc"] = "6ae7e8e198e8c9b82434f9bb0d7da139",
+         ["invalid_config.luacheckrc"] = "8586114ad25bf64215d3803bd5dc880b",
+         ["invalid_override_config.luacheckrc"] = "78735bb921e58540653e8c8de8a42cfa",
+         ["multioverride_config.luacheckrc"] = "7d2911b9ea662092aef0be23038e5e68",
+         ["override_config.luacheckrc"] = "b8e6fd2cf9516fa197ef507894243b3c",
+         project = {
+            [".luacheckrc"] = "5fc9cbd53a9e5c7131ff564a040e35c5",
+            nested = {
+               ["ab.lua"] = "aa0e630de98498d25bdd372de57edc61",
+               nested = {
+                  ["abc.lua"] = "b2c5cf5f6097a20801c8eb1744f3fe60"
+               }
+            }
+         },
+         ["runtime_bad_config.luacheckrc"] = "59068e3fbd25b6cb4c57544578f0dbf8"
+      },
+      ["expand_rockspec_spec.lua"] = "2b42d81f2df96b9cac0331b478f22216",
+      ["filter_spec.lua"] = "0d4f866754b10df454e19d6eaa0d595d",
+      folder = {
+         bad_config = "a38e21188d27a87cef2d8a019464fc76",
+         bad_rockspec = "72ea80384f470a4e95135d373b7571ad",
+         bom = "bd37ccc419db9cb41a6c83fc21745395",
+         config = "ed231d0264cb0d3027be1b2305ac7c0d",
+         env_config = "7fc68b5cda3c84888f215b393044ea8a",
+         folder1 = {
+            another = "d41d8cd98f00b204e9800998ecf8427e",
+            fail = "d41d8cd98f00b204e9800998ecf8427e",
+            file = "d41d8cd98f00b204e9800998ecf8427e"
+         },
+         folder2 = {
+            garbage = "d41d8cd98f00b204e9800998ecf8427e"
+         },
+         foo = "e66545a2155380046fce3fdbd32a6b4f",
+         rockspec = "a18486c65b46469f9ff577e11a7dff4b"
+      },
+      ["format_spec.lua"] = "036f10abaf704318c2e066a08bc30eb4",
+      formatters = {
+         ["custom_formatter.lua"] = "38408ddaf3e9061be468019e717e0342"
+      },
+      ["fs_spec.lua"] = "ef963d00505a3a9ceec76d2f073597b8",
+      ["globbing_spec.lua"] = "f3581382ac63c14ac06a08bf3f09b0c5",
+      ["helper.lua"] = "f1eebb14c7938e21d25a91a16dcc85f2",
+      ["lexer_spec.lua"] = "78daffde0891bc968a20819331c26ad0",
+      ["linearize_spec.lua"] = "82a4eb7c330a49460f255c7e729b9ed2",
+      ["luacheck_spec.lua"] = "9e6ebc528c4dc9d4b365f100b18c796c",
+      ["options_spec.lua"] = "46308ec550fd15877e6eae66bac0b1ae",
+      ["parser_spec.lua"] = "89e7af474900d87a180911cbe228d3f0",
+      samples = {
+         ["argparse.lua"] = "900f5cc887e0c73168b9822301b419c9",
+         ["bad.rockspec"] = "93b1d79bdaaec6881aefc9466de75503",
+         ["bad_code.lua"] = "9c40cf9418a65858422df2c866144a56",
+         ["bad_flow.lua"] = "cc76d408f5cb5c3191042f6deb78cf4d",
+         ["compat.lua"] = "d4fbad9c1eca072cc066f97be436edc9",
+         ["custom_std_inline_options.lua"] = "7ffef2d1509a97da4890b395dab28bef",
+         ["defined.lua"] = "380931543a8c89245b5e737c8c505ae6",
+         ["defined2.lua"] = "88be60a535b6b1f7b1332a2ae937ccbc",
+         ["defined3.lua"] = "a89588e93466bccdf41ddbd01c1b38b5",
+         ["defined4.lua"] = "0dc200064b414d7823a890a94a262304",
+         ["empty.lua"] = "d41d8cd98f00b204e9800998ecf8427e",
+         ["global_inline_options.lua"] = "cb19644ed845cd7207044f75bd828139",
+         ["globals.lua"] = "1fc377162faa0a30ff7edeff565ce20a",
+         ["good_code.lua"] = "7b5d4a55154487bacc7af59bfe9e572d",
+         ["inline_options.lua"] = "8c0616392d8742c94cb627af4088b273",
+         ["python_code.lua"] = "32f38f024b3d051ced70bcd3b587d26a",
+         ["read_globals.lua"] = "c62e9d761a36e1ecca9dd15b7f4afb66",
+         ["read_globals_inline_options.lua"] = "033fcfcb1164910ada3bcf7891f5c003",
+         ["redefined.lua"] = "eba359801bfe9f1c86e96fd98f8058a7",
+         ["sample.rockspec"] = "b5b73029f4b689f06ddc71ceb975b388",
+         ["unused_code.lua"] = "5ae286b8baa1f5db030f84dafb5ab90e",
+         ["unused_secondaries.lua"] = "898fd5486f7d7569783a8fe07528d540"
+      },
+      ["utils_spec.lua"] = "a8fd74c221e1e79c67dfc136398dd3a0"
+   }
+}

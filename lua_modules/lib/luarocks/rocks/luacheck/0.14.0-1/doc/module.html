@@ -1,0 +1,254 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Luacheck module &mdash; luacheck 0.14.0 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="luacheck 0.14.0 documentation" href="index.html"/>
+        <link rel="prev" title="Inline options" href="inline.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> luacheck
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.14.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="warnings.html">List of warnings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inline.html">Inline options</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Luacheck module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#report-format">Report format</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">luacheck</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>Luacheck module</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/module.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="luacheck-module">
+<h1>Luacheck module<a class="headerlink" href="#luacheck-module" title="Permalink to this headline">¶</a></h1>
+<p>Use <code class="docutils literal"><span class="pre">local</span> <span class="pre">luacheck</span> <span class="pre">=</span> <span class="pre">require</span> <span class="pre">&quot;luacheck&quot;</span></code> to import <code class="docutils literal"><span class="pre">luacheck</span></code> module. It contains the following functions:</p>
+<ul class="simple">
+<li><code class="docutils literal"><span class="pre">luacheck.get_report(source)</span></code>: Given source string, returns analysis data (a table).</li>
+<li><code class="docutils literal"><span class="pre">luacheck.process_reports(reports,</span> <span class="pre">options)</span></code>: Processes array of analysis reports and applies options. <code class="docutils literal"><span class="pre">reports[i]</span></code> uses <code class="docutils literal"><span class="pre">options</span></code>, <code class="docutils literal"><span class="pre">options[i]</span></code>, <code class="docutils literal"><span class="pre">options[i][1]</span></code>, <code class="docutils literal"><span class="pre">options[i][2]</span></code>, ... as options, overriding each other in that order. Options table is a table with fields similar to config options; see <a class="reference internal" href="config.html#options"><span>Config options</span></a>. Analysis reports with field <code class="docutils literal"><span class="pre">fatal</span></code> are ignored. <code class="docutils literal"><span class="pre">process_reports</span></code> returns final report, see <a class="reference internal" href="#report"><span>Report format</span></a>.</li>
+<li><code class="docutils literal"><span class="pre">luacheck.check_strings(sources,</span> <span class="pre">options)</span></code>: Checks array of sources using options, returns final report. Tables with field <code class="docutils literal"><span class="pre">fatal</span></code> within <code class="docutils literal"><span class="pre">sources</span></code> array are ignored.</li>
+<li><code class="docutils literal"><span class="pre">luacheck.check_files(files,</span> <span class="pre">options)</span></code>: Checks array of files using options, returns final report. Open file handles can passed instead of filenames, in which case they will be read till EOF and closed.</li>
+<li><code class="docutils literal"><span class="pre">luacheck.get_message(issue)</span></code>: Returns a string message for an issue, see <a class="reference internal" href="#report"><span>Report format</span></a>.</li>
+</ul>
+<p><code class="docutils literal"><span class="pre">luacheck._VERSION</span></code> contains Luacheck version as a string in <code class="docutils literal"><span class="pre">MAJOR.MINOR.PATCH</span></code> format.</p>
+<p>Using <code class="docutils literal"><span class="pre">luacheck</span></code> as a function is equivalent to calling <code class="docutils literal"><span class="pre">luacheck.check_files</span></code>.</p>
+<div class="section" id="report-format">
+<span id="report"></span><h2>Report format<a class="headerlink" href="#report-format" title="Permalink to this headline">¶</a></h2>
+<p>A final report is an array of file reports plus fields <code class="docutils literal"><span class="pre">warnings</span></code>, <code class="docutils literal"><span class="pre">errors</span></code> and <code class="docutils literal"><span class="pre">fatals</span></code> containing total number of warnings, errors and fatal errors, correspondingly.</p>
+<p>A file report is an array of issues (warnings or errors). If a fatal error occured while checking a file, its report will have <code class="docutils literal"><span class="pre">fatal</span></code> field containing error type and <code class="docutils literal"><span class="pre">msg</span></code> field containing error message.</p>
+<p>An issue is a table with field <code class="docutils literal"><span class="pre">code</span></code> indicating its type (see <a class="reference internal" href="warnings.html"><em>List of warnings</em></a>), and fields <code class="docutils literal"><span class="pre">line</span></code>, <code class="docutils literal"><span class="pre">column</span></code> and <code class="docutils literal"><span class="pre">end_column</span></code> pointing to the source of the warning. <code class="docutils literal"><span class="pre">name</span></code> field may contain name of related variable. Issues of some types can also have additional fields:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="5%" />
+<col width="95%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Codes</th>
+<th class="head">Additional fields</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>011</td>
+<td><code class="docutils literal"><span class="pre">msg</span></code> field contains syntax error message.</td>
+</tr>
+<tr class="row-odd"><td>111</td>
+<td><code class="docutils literal"><span class="pre">module</span></code> field indicates that assignment is to a non-module global variable.</td>
+</tr>
+<tr class="row-even"><td>211</td>
+<td><code class="docutils literal"><span class="pre">func</span></code> field indicates that unused variable is a function.</td>
+</tr>
+<tr class="row-odd"><td>211</td>
+<td><code class="docutils literal"><span class="pre">recursive</span></code> field indicates that unused function is recursive.</td>
+</tr>
+<tr class="row-even"><td>211</td>
+<td><code class="docutils literal"><span class="pre">mutually_recursive</span></code> field is set for unused mutually recursive functions.</td>
+</tr>
+<tr class="row-odd"><td>4..</td>
+<td><code class="docutils literal"><span class="pre">prev_line</span></code> and <code class="docutils literal"><span class="pre">prev_column</span></code> fields contain location of the overwritten definition.</td>
+</tr>
+</tbody>
+</table>
+<p>Other fields may be present for internal reasons.</p>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="inline.html" class="btn btn-neutral" title="Inline options" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2014 - 2016, Peter Melnichenko.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.14.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

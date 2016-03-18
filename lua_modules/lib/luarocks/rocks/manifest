@@ -1,6 +1,9 @@
 commands = {
    busted = {
       "busted/2.0.rc11-0"
+   },
+   luacheck = {
+      "luacheck/0.14.0-1"
    }
 }
 dependencies = {
@@ -171,6 +174,36 @@ dependencies = {
                }
             },
             name = "lua"
+         }
+      }
+   },
+   luacheck = {
+      ["0.14.0-1"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 1, string = "5.1"
+                  }
+               }, {
+                  op = "<",
+                  version = {
+                     5, 4, string = "5.4"
+                  }
+               }
+            },
+            name = "lua"
+         }, {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     1, 6, 3, string = "1.6.3"
+                  }
+               }
+            },
+            name = "luafilesystem"
          }
       }
    },
@@ -404,6 +437,75 @@ modules = {
    },
    ltn12 = {
       "luasocket/3.0rc1-2"
+   },
+   luacheck = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.analyze"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.argparse"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.cache"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.check"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.config"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.core_utils"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.expand_rockspec"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.filter"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.format"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.fs"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.globbing"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.inline_options"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.lexer"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.linearize"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.main"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.multithreading"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.options"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.parser"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.reachability"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.stds"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.utils"] = {
+      "luacheck/0.14.0-1"
+   },
+   ["luacheck.version"] = {
+      "luacheck/0.14.0-1"
    },
    luassert = {
       "luassert/1.7.9-0"
@@ -771,6 +873,44 @@ repository = {
             dependencies = {},
             modules = {
                cliargs = "cliargs.lua"
+            }
+         }
+      }
+   },
+   luacheck = {
+      ["0.14.0-1"] = {
+         {
+            arch = "installed",
+            commands = {
+               luacheck = "luacheck"
+            },
+            dependencies = {
+               luafilesystem = "1.6.3-2"
+            },
+            modules = {
+               luacheck = "luacheck/init.lua",
+               ["luacheck.analyze"] = "luacheck/analyze.lua",
+               ["luacheck.argparse"] = "luacheck/argparse.lua",
+               ["luacheck.cache"] = "luacheck/cache.lua",
+               ["luacheck.check"] = "luacheck/check.lua",
+               ["luacheck.config"] = "luacheck/config.lua",
+               ["luacheck.core_utils"] = "luacheck/core_utils.lua",
+               ["luacheck.expand_rockspec"] = "luacheck/expand_rockspec.lua",
+               ["luacheck.filter"] = "luacheck/filter.lua",
+               ["luacheck.format"] = "luacheck/format.lua",
+               ["luacheck.fs"] = "luacheck/fs.lua",
+               ["luacheck.globbing"] = "luacheck/globbing.lua",
+               ["luacheck.inline_options"] = "luacheck/inline_options.lua",
+               ["luacheck.lexer"] = "luacheck/lexer.lua",
+               ["luacheck.linearize"] = "luacheck/linearize.lua",
+               ["luacheck.main"] = "luacheck/main.lua",
+               ["luacheck.multithreading"] = "luacheck/multithreading.lua",
+               ["luacheck.options"] = "luacheck/options.lua",
+               ["luacheck.parser"] = "luacheck/parser.lua",
+               ["luacheck.reachability"] = "luacheck/reachability.lua",
+               ["luacheck.stds"] = "luacheck/stds.lua",
+               ["luacheck.utils"] = "luacheck/utils.lua",
+               ["luacheck.version"] = "luacheck/version.lua"
             }
          }
       }
