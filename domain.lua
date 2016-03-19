@@ -2,9 +2,9 @@ local config = require('config')
 local http = require('resty.http')
 local cjson = require('cjson')
 
-local domain = {}
+local _M = {}
 
-function domain.get_meta(domain_name) -- returns (meta, err)
+function _M.get_meta(domain_name) -- returns (meta, err)
   -- use http instead of https because metadata does not contain sensitive info anyway
   local domains_url = "http://"..config.s3_host.."/domains"
 
@@ -35,4 +35,4 @@ function domain.get_meta(domain_name) -- returns (meta, err)
   return j, nil
 end
 
-return domain
+return _M

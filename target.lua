@@ -1,8 +1,8 @@
 local http = require('resty.http')
 
-local target = {}
+local _M = {}
 
-function target.resolve(path, webroot, drop_dot_html) -- returns (target_path, should_redirect, err)
+function _M.resolve(path, webroot, drop_dot_html) -- returns (target_path, should_redirect, err)
   if string.sub(path, -1) == "/" then
     return path.."index.html", false, nil
   end
@@ -77,4 +77,4 @@ function target.resolve(path, webroot, drop_dot_html) -- returns (target_path, s
   return path, false, nil
 end
 
-return target
+return _M
