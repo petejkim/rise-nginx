@@ -6,7 +6,7 @@ local _M = {
 
 local function post_invalidate(domain)
   _M.cache:delete(domain..":pfx")
-  return '{"purged": true}'
+  return '{"invalidated": true}'
 end
 
 function _M.handle(method, path) -- returns (json_body, err, err_log)
