@@ -1,0 +1,11 @@
+#!/bin/bash -e
+
+IMAGE_NAME=rise-nginx-build
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/..
+
+# Ensure we have the latest image
+docker build -t $IMAGE_NAME .
+
+docker run --rm -v $(pwd):/opt/openresty/lualib/rise-nginx $IMAGE_NAME bash -c "cd /opt/openresty/lualib/rise-nginx/ && script/test spec"

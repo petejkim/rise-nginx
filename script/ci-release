@@ -1,0 +1,45 @@
+#!/bin/bash -e
+
+PUBLIC_BUCKET=${PUBLIC_BUCKET:="rise-nginx-staging"}
+UPLOAD_S3=${UPLOAD_S3:="false"}
+NAME=rise-nginx
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+cd $DIR/..
+
+get_version() {
+  app=$1
+  version=$(cat VERSION) # get version from version file
+  sha=$(git rev-list --max-count=1 --abbrev-commit HEAD)
+
+  echo "${version}-${sha}" # 1.0.1-asdf
+}
+
+upload_s3() {
+  if [[ "$UPLOAD_S3" == "true" ]]; then
+    s3cmd --region us-east-1 --access_key=$ACCESS_KEY --secret_key=$SECRET_KEY \
+      put $1 s3://$PUBLIC_BUCKET/$2
+  fi
+}
+
+bundle() {
+  # Remove old builds
+  rm -rf build && mkdir build
+
+  version=$(get_version)
+  pkg=build/${NAME}-${version}.tar.gz
+  latestpkg=build/${NAME}-latest.tar.gz
+
+  echo "NGINX_LUA_VERSION=${version}" > jenkins.properties
+
+  tar zvcf $pkg --exclude ./build --exclude ./.git .
+  cp $pkg $latestpkg
+
+  upload_s3 $pkg $pkg
+  upload_s3 $pkg $latestpkg
+
+  rm $pkg
+  rm $latestpkg
+}
+
+bundle
