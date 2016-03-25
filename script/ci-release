@@ -27,6 +27,8 @@ bundle() {
   rm -rf build && mkdir build
 
   version=$(get_version)
+  dest_pkg=${NAME}-${version}.tar.gz
+  dest_latestpkg=${NAME}-latest.tar.gz
   pkg=build/${NAME}-${version}.tar.gz
   latestpkg=build/${NAME}-latest.tar.gz
 
@@ -35,8 +37,8 @@ bundle() {
   tar zvcf $pkg --exclude ./build --exclude ./.git .
   cp $pkg $latestpkg
 
-  upload_s3 $pkg $pkg
-  upload_s3 $pkg $latestpkg
+  upload_s3 $pkg $dest_pkg
+  upload_s3 $pkg $dest_latestpkg
 
   rm $pkg
   rm $latestpkg
