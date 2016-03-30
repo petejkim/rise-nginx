@@ -33,6 +33,7 @@ bundle() {
   latestpkg=build/${NAME}-latest.tar.gz
 
   echo "NGINX_LUA_VERSION=${version}" > jenkins.properties
+  echo "${version}" > githash
 
   tar zvcf $pkg --exclude-from=.packageignore .
   cp $pkg $latestpkg
