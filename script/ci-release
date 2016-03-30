@@ -34,7 +34,7 @@ bundle() {
 
   echo "NGINX_LUA_VERSION=${version}" > jenkins.properties
 
-  tar zvcf $pkg --exclude ./build --exclude ./.git .
+  tar zvcf $pkg --exclude-from=.packageignore .
   cp $pkg $latestpkg
 
   upload_s3 $pkg $dest_pkg

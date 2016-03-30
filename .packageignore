@@ -1,0 +1,9 @@
+.git
+.gitignore
+.packageignore
+dev
+build
+Dockerfile
+script
+spec
+*.tar.gz
