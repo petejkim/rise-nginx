@@ -55,5 +55,7 @@ script/test spec
 luarocks install --tree lua_modules PACKAGE_NAME
 ```
 
+This will tell LuaRocks to unpack the Lua module into the `lua_modules` dir.
+
 - - -
 Copyright (c) 2016 Nitrous, Inc. All Rights Reserved.
