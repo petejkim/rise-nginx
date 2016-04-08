@@ -25,40 +25,42 @@ function _M.handle(prefix, path) -- returns (target, err, err_log)
       return nil, _M.internal_server_error, 'could not resolve "'..prefix..path..'"'
     end
 
-    local httpc = http.new()
-    local url = "http://"..webroot_uri..target_path
-    local res
+    if not should_redirect then
+      local httpc = http.new()
+      local url = "http://"..webroot_uri..target_path
+      local res
 
-    res, err = httpc:request_uri(url, { method = "HEAD" })
-    if err then
-      return nil, _M.internal_server_error, 'failed to fetch "'..url..'" due to "'..err..'"'
-    end
-
-    if res.status == 403 or res.status == 404 then
-      local custom_404_found = false
-
-      util.request_uri_stream(httpc, "http://"..webroot_uri.."/404.html", {}, function(r)
-        custom_404_found = r.status == 200
-        if custom_404_found then
-          _M._ngx.status = 404
-          if r.headers then
-            for k, v in pairs(r.headers) do
-              _M._ngx.header[k] = v
-            end
-          end
-        else -- custom 404 not found
-          return false -- stop reading body
-        end
-      end, function(chunk)
-        _M._ngx.print(chunk) -- pipe body to response
-        return true -- continue reading body
-      end)
-      if custom_404_found then
-        _M._ngx.exit(404)
-      else
-        _M._ngx.exit(403)
+      res, err = httpc:request_uri(url, { method = "HEAD" })
+      if err then
+        return nil, _M.internal_server_error, 'failed to fetch "'..url..'" due to "'..err..'"'
       end
-      return nil, nil, nil
+
+      if res.status == 403 or res.status == 404 then
+        local custom_404_found = false
+
+        util.request_uri_stream(httpc, "http://"..webroot_uri.."/404.html", {}, function(r)
+          custom_404_found = r.status == 200
+          if custom_404_found then
+            _M._ngx.status = 404
+            if r.headers then
+              for k, v in pairs(r.headers) do
+                _M._ngx.header[k] = v
+              end
+            end
+          else -- custom 404 not found
+            return false -- stop reading body
+          end
+        end, function(chunk)
+          _M._ngx.print(chunk) -- pipe body to response
+          return true -- continue reading body
+        end)
+        if custom_404_found then
+          _M._ngx.exit(404)
+        else
+          _M._ngx.exit(403)
+        end
+        return nil, nil, nil
+      end
     end
 
     _M.cache:set(target_path_cache_key, target_path)
