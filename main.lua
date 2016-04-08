@@ -1,6 +1,15 @@
 local handler = require('handler')
 
-local prefix, target, err, err_log = handler.handle(ngx.var.host, ngx.var.request_uri)
+local prefix = ngx.req.get_headers()['X-Rise-Prefix']
+
+-- openresty's req.get_headers() retardedly returns either table (array) or string
+-- depending on the number of times the header appears in the request
+if type(prefix) == 'table' then
+  ngx.exit(ngx.HTTP_BAD_REQUEST)
+  return
+end
+
+local target, err, err_log = handler.handle(prefix, ngx.var.request_uri)
 
 if err then
   if not err_log then
@@ -16,5 +25,6 @@ if err then
   return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 
-ngx.var.rise_prefix = prefix
-ngx.var.rise_target = target
+if target then
+  ngx.var.rise_target = target
+end

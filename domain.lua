@@ -2,7 +2,9 @@ local config = require('config')
 local http = require('resty.http')
 local cjson = require('cjson')
 
-local _M = {}
+local _M = {
+  err_not_found = "not found"
+}
 
 function _M.get_meta(domain_name) -- returns (meta, err)
   -- use http instead of https because metadata does not contain sensitive info anyway
@@ -18,7 +20,7 @@ function _M.get_meta(domain_name) -- returns (meta, err)
   end
 
   if res.status == 403 then -- s3 returns 403 when a non-existent path is requested
-    return nil, "not found"
+    return nil, _M.err_not_found
   elseif res.status ~= 200 then
     return nil, res.status.." "..res.body
   end
