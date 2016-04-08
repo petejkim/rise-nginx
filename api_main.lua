@@ -4,7 +4,7 @@ local json_body, err, err_log = api_handler.handle(ngx.req.get_method(), ngx.var
 
 ngx.var.rise_content_type = "application/json"
 
-ngx.say(json_body)
+ngx.print(json_body)
 
 if err then
   if not err_log then

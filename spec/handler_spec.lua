@@ -1,86 +1,132 @@
 local config = require('config')
 local handler = require('handler')
-local domain = require('domain')
+local http = require('resty.http')
+local util = require('util')
 local target = require('target')
 local Dict = require("spec/support/fake_shared_dict")
+local fake_ngx = require("spec/support/fake_ngx")
 
 local stub_fn, unstub_fn = _G.stub_fn, _G.unstub_fn
 
 describe("handler", function()
-  local cache
+  local cache, fngx
 
   setup(function()
     cache = Dict:new()
     handler.cache = cache
+
+    fngx = fake_ngx.new()
+    handler._ngx = fngx
+  end)
+
+  before_each(function()
+    cache:flush_all()
+    fngx.reset()
   end)
 
   describe(".handle", function()
-    local get_meta_stub
-    local resolve_stub
+    local resolve_stub, httpc_stub
 
     before_each(function()
-      cache:flush_all()
+      httpc_stub = {}
+      stub(http, 'new', httpc_stub)
+      httpc_stub.request_uri = function(self, uri, opts)
+        assert(false,'should not be executed')
+      end
+
+      resolve_stub = stub_fn(target, "resolve", function(path, webroot, drop_dot_html)
+        return "/index.html", false, nil
+      end)
     end)
 
     after_each(function()
-      unstub_fn(domain, "get_meta")
       unstub_fn(target, "resolve")
+
+      http.new:revert()
     end)
 
-    context("prefix is not cached", function()
+    context("when the requested resource exists in s3", function()
       before_each(function()
-        get_meta_stub = stub_fn(domain, "get_meta", function(host)
+        httpc_stub.request_uri = function(self, uri, opts)
+          assert.are.equal(uri, "http://test-s3.example.com/deployments/a1b2c3-123/webroot/index.html")
+          assert.are.same(opts, { method = "HEAD" })
           return {
-            prefix = "a1b2c3-123"
+            status = 200
           }, nil
-        end)
-
-        resolve_stub = stub_fn(target, "resolve", function(path, webroot, drop_dot_html)
-          return "/index.html", false, nil
-        end)
+        end
       end)
 
-      it("fetches meta.json to obtain prefix and caches prefix, target and should_redirect", function()
-        local pfx, tgt, err, err_log = handler.handle("foo-bar-express.rise.cloud", "/")
+      it("resolves target and should_redirect", function()
+        local tgt, err, err_log = handler.handle("a1b2c3-123", "/")
 
-        assert.are.equal(pfx, "a1b2c3-123")
         assert.are.equal(tgt, config.s3_host.."/deployments/a1b2c3-123/webroot/index.html")
         assert.is_nil(err)
         assert.is_nil(err_log)
 
-        assert.spy(get_meta_stub).was_called_with("foo-bar-express.rise.cloud")
         assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
 
-        assert.are.equal(cache:get("foo-bar-express.rise.cloud:pfx"), "a1b2c3-123")
         assert.are.equal(cache:get("a1b2c3-123:/:tgt"), "/index.html")
         assert.is_false(cache:get("a1b2c3-123:/:rdr"))
       end)
     end)
 
-    context("prefix is cached", function()
+    context("the file does not exist on s3", function()
+      local headers
+
       before_each(function()
-        get_meta_stub = stub_fn(domain, "get_meta")
-        resolve_stub = stub_fn(target, "resolve")
+        httpc_stub.request_uri = function(self, uri, opts)
+          assert.are.equal(uri, "http://test-s3.example.com/deployments/a1b2c3-123/webroot/index.html")
+          assert.are.same(opts, { method = "HEAD" })
+
+          return {
+            status = 403 -- s3 returns 403 access denied when an object does not exist
+          }, nil
+        end
+
+        headers = {
+          ["Content-Length"] = "23",
+          ["Content-Type"] = "text/html",
+          Date = "Thu, 07 Apr 2016 18:14:23 GMT",
+          ETag = '"bf7f567450d007008332ac96d29032d3"',
+          ["Last-Modified"] = "Tue, 29 Mar 2016 22:19:55 GMT",
+          Server = "AmazonS3",
+          ["x-amz-id-2"] = "8J2guyuubw0qfpLNYmu1d",
+          ["x-amz-request-id"] = "5s8sQ96UeDGAk49kHbq93FlWAyeQxnrZSdAXCt"
+        }
+
+        stub_fn(util, "request_uri_stream", function(httpc, uri, params, res_callback, data_callback)
+          assert.are.equal(httpc, httpc_stub)
+          assert.are.equal(uri, "http://test-s3.example.com/deployments/a1b2c3-123/webroot/404.html")
+          assert.are.same(params, {})
+          res_callback({
+            status = 200,
+            headers = headers
+          })
+          data_callback("<h1>404")
+          data_callback(" Not Found</h1>")
+        end)
       end)
 
-      it("fetches prefix, target and should_redirect from cache", function()
-        cache:set("foo-bar-express.rise.cloud:pfx", "x0y1z2-012")
-        cache:set("x0y1z2-012:/foo:tgt", "/foo/")
-        cache:set("x0y1z2-012:/foo:rdr", true)
+      after_each(function()
+        unstub_fn(util, "request_uri_stream")
+      end)
 
-        local pfx, tgt, err, err_log = handler.handle("foo-bar-express.rise.cloud", "/foo")
+      it("returns /404.html page", function()
+        local tgt, err, err_log = handler.handle("a1b2c3-123", "/")
 
-        assert.are.equal(pfx, "x0y1z2-012")
-        assert.are.equal(tgt, "/foo/")
-        assert.are_equal(err, handler.err_redirect)
+        assert.is_nil(tgt)
+        assert.is_nil(err)
         assert.is_nil(err_log)
 
-        assert.spy(get_meta_stub).was_not_called()
-        assert.spy(resolve_stub).was_not_called()
+        assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
 
-        assert.are.equal(cache:get("foo-bar-express.rise.cloud:pfx"), "x0y1z2-012")
-        assert.are.equal(cache:get("x0y1z2-012:/foo:tgt"), "/foo/")
-        assert.is_true(cache:get("x0y1z2-012:/foo:rdr"))
+        assert.is_nil(cache:get("a1b2c3-123:/:tgt"))
+        assert.is_nil(cache:get("a1b2c3-123:/:rdr"))
+
+        assert.are.same(fngx.print_calls, { "<h1>404", " Not Found</h1>" })
+        assert.are.equal(fngx.status, 404)
+        assert.are.same(fngx.header, headers)
+        assert.are.same(fngx.exit_calls, { 404 })
       end)
     end)
   end)
