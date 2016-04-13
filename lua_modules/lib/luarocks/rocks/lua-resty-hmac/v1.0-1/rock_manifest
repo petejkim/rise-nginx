@@ -1,0 +1,12 @@
+rock_manifest = {
+   doc = {
+      LICENSE = "deb0660860907a0ea71371ac967484fb",
+      ["README.md"] = "7591cc5323f5f19817c2463b4bbfb184"
+   },
+   lua = {
+      resty = {
+         ["hmac.lua"] = "2c133d8159a3049125299c442b66db56"
+      }
+   },
+   ["lua-resty-hmac-v1.0-1.rockspec"] = "f72e238c10364bbbe8eb0533ebacc4bf"
+}

@@ -2,6 +2,12 @@ commands = {
    busted = {
       "busted/2.0.rc11-0"
    },
+   json2lua = {
+      "lua-cjson/2.1.0-1"
+   },
+   lua2json = {
+      "lua-cjson/2.1.0-1"
+   },
    luacheck = {
       "luacheck/0.14.0-1"
    }
@@ -124,6 +130,26 @@ dependencies = {
          }
       }
    },
+   date = {
+      ["2.1.2-1"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 0, string = "5.0"
+                  }
+               }, {
+                  op = "<",
+                  version = {
+                     5, 4, string = "5.4"
+                  }
+               }
+            },
+            name = "lua"
+         }
+      }
+   },
    dkjson = {
       ["2.5-2"] = {
          {
@@ -141,6 +167,39 @@ dependencies = {
                }
             },
             name = "lua"
+         }
+      }
+   },
+   ["lua-cjson"] = {
+      ["2.1.0-1"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 1, string = "5.1"
+                  }
+               }
+            },
+            name = "lua"
+         }
+      }
+   },
+   ["lua-resty-hmac"] = {
+      ["v1.0-1"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 1, string = "5.1"
+                  }
+               }
+            },
+            name = "lua"
+         }, {
+            constraints = {},
+            name = "luacrypto"
          }
       }
    },
@@ -204,6 +263,26 @@ dependencies = {
                }
             },
             name = "luafilesystem"
+         }
+      }
+   },
+   luacrypto = {
+      ["0.3.2-1"] = {
+         {
+            constraints = {
+               {
+                  op = ">=",
+                  version = {
+                     5, 1, string = "5.1"
+                  }
+               }, {
+                  op = "<",
+                  version = {
+                     5, 3, string = "5.3"
+                  }
+               }
+            },
+            name = "lua"
          }
       }
    },
@@ -426,17 +505,35 @@ modules = {
    ["busted.utils"] = {
       "busted/2.0.rc11-0"
    },
+   cjson = {
+      "lua-cjson/2.1.0-1"
+   },
+   ["cjson.util"] = {
+      "lua-cjson/2.1.0-1"
+   },
    cliargs = {
       "lua_cliargs/2.5-5"
    },
+   crypto = {
+      "luacrypto/0.3.2-1"
+   },
+   date = {
+      "date/2.1.2-1"
+   },
    dkjson = {
       "dkjson/2.5-2"
+   },
+   json2lua = {
+      "lua-cjson/2.1.0-1"
    },
    lfs = {
       "luafilesystem/1.6.3-2"
    },
    ltn12 = {
       "luasocket/3.0rc1-2"
+   },
+   lua2json = {
+      "lua-cjson/2.1.0-1"
    },
    luacheck = {
       "luacheck/0.14.0-1"
@@ -708,6 +805,9 @@ modules = {
    ["pl.xml"] = {
       "penlight/1.3.2-2"
    },
+   ["resty.hmac"] = {
+      "lua-resty-hmac/v1.0-1"
+   },
    ["resty.http"] = {
       "lua-resty-http/0.07-0"
    },
@@ -825,6 +925,18 @@ repository = {
          }
       }
    },
+   date = {
+      ["2.1.2-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               date = "date.lua"
+            }
+         }
+      }
+   },
    dkjson = {
       ["2.5-2"] = {
          {
@@ -833,6 +945,38 @@ repository = {
             dependencies = {},
             modules = {
                dkjson = "dkjson.lua"
+            }
+         }
+      }
+   },
+   ["lua-cjson"] = {
+      ["2.1.0-1"] = {
+         {
+            arch = "installed",
+            commands = {
+               json2lua = "json2lua",
+               lua2json = "lua2json"
+            },
+            dependencies = {},
+            modules = {
+               cjson = "cjson.so",
+               ["cjson.util"] = "cjson/util.lua",
+               json2lua = "json2lua.lua",
+               lua2json = "lua2json.lua"
+            }
+         }
+      }
+   },
+   ["lua-resty-hmac"] = {
+      ["v1.0-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {
+               luacrypto = "0.3.2-1"
+            },
+            modules = {
+               ["resty.hmac"] = "resty/hmac.lua"
             }
          }
       }
@@ -911,6 +1055,18 @@ repository = {
                ["luacheck.stds"] = "luacheck/stds.lua",
                ["luacheck.utils"] = "luacheck/utils.lua",
                ["luacheck.version"] = "luacheck/version.lua"
+            }
+         }
+      }
+   },
+   luacrypto = {
+      ["0.3.2-1"] = {
+         {
+            arch = "installed",
+            commands = {},
+            dependencies = {},
+            modules = {
+               crypto = "crypto.so"
             }
          }
       }
