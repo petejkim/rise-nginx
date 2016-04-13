@@ -1,6 +1,7 @@
 local config = require('config')
 local http = require('resty.http')
 local cjson = require('cjson')
+local s3_utils = require('s3_utils')
 
 local _M = {
   err_not_found = "not found"
@@ -35,6 +36,21 @@ function _M.get_meta(domain_name) -- returns (meta, err)
   end
 
   return j, nil
+end
+
+function _M.get_ssl(domain_name)
+  local crt_body, key_body, err
+  crt_body, err = s3_utils.get_s3_private_file(config, "/certs/"..domain_name.."/ssl.crt")
+  if err then
+    return nil, nil, err
+  end
+
+  key_body, err = s3_utils.get_s3_private_file(config, "/certs/"..domain_name.."/ssl.key")
+  if err then
+    return nil, nil, err
+  end
+
+  return crt_body, key_body, nil
 end
 
 return _M

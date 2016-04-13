@@ -6,7 +6,7 @@ local _M = {
   cache = ngx.shared.rise
 }
 
-function _M.handle(host, path) -- returns (prefix, err, err_log)
+function _M.handle(host) -- returns (prefix, err, err_log)
   local prefix_cache_key = host..":pfx"
   local prefix = _M.cache:get(prefix_cache_key)
 

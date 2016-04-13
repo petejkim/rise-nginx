@@ -1,5 +1,7 @@
 local domain = require('domain')
 local http = require('resty.http')
+local s3_utils = require('s3_utils')
+local stub_fn, unstub_fn = _G.stub_fn, _G.unstub_fn
 
 describe("domain", function()
   describe(".get_meta", function()
@@ -73,6 +75,47 @@ describe("domain", function()
         local j, err = domain.get_meta("foo-bar-express.rise.cloud")
         assert.is_nil(err)
         assert.are.same(j, { prefix = "bafb79-26" })
+      end)
+    end)
+  end)
+
+  describe(".get_ssl", function()
+    after_each(function()
+      unstub_fn(s3_utils, "get_s3_private_file")
+    end)
+
+    context("when ssl certs can be fetched successfully", function()
+
+      local requests = {}
+      requests["/certs/foo-bar-express.rise.cloud/ssl.crt"] = "my private certificate"
+      requests["/certs/foo-bar-express.rise.cloud/ssl.key"] = "my private key"
+
+      before_each(function()
+        stub_fn(s3_utils, "get_s3_private_file", function(cfg, path)
+          return requests[path], nil
+        end)
+      end)
+
+      it("returns certs and no error", function()
+        local crt, key, err = domain.get_ssl("foo-bar-express.rise.cloud")
+        assert.is_not_nil(crt)
+        assert.is_not_nil(key)
+        assert.is_nil(err)
+        assert.are.same(crt, 'my private certificate')
+        assert.are.same(key, 'my private key')
+      end)
+    end)
+
+    context("when ssl certs can't be fetched", function()
+      before_each(function()
+        stub_fn(s3_utils, "get_s3_private_file", function(cfg, path)
+          return nil, s3_utils.err_not_found
+        end)
+      end)
+
+      it("returns error", function()
+        local _, _, err = domain.get_ssl("foo-bar-express.rise.cloud")
+        assert.is_not_nil(err)
       end)
     end)
   end)

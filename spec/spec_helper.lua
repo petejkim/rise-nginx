@@ -1,5 +1,6 @@
 local config = require("config")
 local spy = require('luassert.spy')
+require('crypto')
 
 config.s3_host = "test-s3.example.com"
 
