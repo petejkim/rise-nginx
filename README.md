@@ -40,6 +40,8 @@ sudo ln -s ~/code/rise-nginx
 cd ~/code/rise-nginx
 sudo cp /opt/openresty/nginx/conf/nginx{,-orig}.conf
 sudo cp dev/nginx.conf /opt/openresty/nginx/conf/nginx.conf
+sudo mkdir -p /opt/openresty/nginx/certs
+sudo cp dev/star.risecloud.dev.* /opt/openresty/nginx/certs
 sudo ln -s html /opt/openresty/nginx/custom_html
 ```
 
