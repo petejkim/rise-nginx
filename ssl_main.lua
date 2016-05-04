@@ -12,12 +12,14 @@ end
 
 der_crt, der_key, err, err_log = ssl_handler.handle(server_name)
 if err then
-  if not err_log then
+  if err_log then
     ngx.log(ngx.ERR, err_log)
   end
 
   if err == ssl_handler.err_not_found then
     return ngx.exit(ngx.HTTP_NOT_FOUND)
+  else
+    ngx.log(ngx.ERR, err)
   end
 
   return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)

@@ -12,7 +12,7 @@ end
 local target, err, err_log = handler.handle(prefix, ngx.var.request_uri)
 
 if err then
-  if not err_log then
+  if err_log then
     ngx.log(ngx.ERR, err_log)
   end
 
@@ -20,6 +20,8 @@ if err then
     return ngx.exit(ngx.HTTP_NOT_FOUND)
   elseif err == handler.err_redirect then
     return ngx.redirect(target, ngx.HTTP_MOVED_TEMPORARILY)
+  else
+    ngx.log(ngx.ERR, err)
   end
 
   return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
