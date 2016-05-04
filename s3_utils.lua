@@ -5,6 +5,16 @@ local _M = {
   err_not_found = 'not found'
 }
 
+local urlencode = function(str)
+   if (str) then
+      str = string.gsub (str, "\n", "\r\n")
+      str = string.gsub (str, "([^%w ])",
+         function (c) return string.format ("%%%02X", string.byte(c)) end)
+      str = string.gsub (str, " ", "+")
+   end
+   return str
+end
+
 -- Gets a private file from an S3 bucket
 -- http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#RESTAuthenticationQueryStringAuth
 function _M.get_s3_private_file(config, path)
@@ -18,9 +28,11 @@ function _M.get_s3_private_file(config, path)
     return nil, err
   end
 
-  local url = 'https://'..config.s3_domain..'/'..config.s3_bucket..path..'?AWSAccessKeyId='..config.s3_access_key..'&Expires='..time..'&Signature='..sig
+  local encoded_sig = urlencode(sig)
+  local url = 'https://'..config.s3_domain..'/'..config.s3_bucket..path..'?AWSAccessKeyId='..config.s3_access_key..'&Expires='..time..'&Signature='..encoded_sig
   local httpc = http.new()
   local res
+
   res, err = httpc:request_uri(url, {
     method = 'GET',
     ssl_verify = false -- TODO: Check how to add main s3 certificates to nginx
