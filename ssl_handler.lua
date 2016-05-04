@@ -83,15 +83,17 @@ function _M.decrypt_certs(crt, key) -- returns crt_decrypted, key_decrypted, err
 end
 
 function _M.cache_certs(host, crt, key)
-    local prefix_cache_key = host..':ssl'
-    _M.cache:set(prefix_cache_key..':der_crt', crt)
-    _M.cache:set(prefix_cache_key..':der_key', key)
+  _M.cache:set(host..':dcrt', crt)
+  _M.cache:set(host..':dkey', key)
 end
 
 function _M.get_from_cache_certs(host)
-  local prefix_cache_key = host..':ssl'
-  return _M.cache:get(prefix_cache_key..':der_crt'), _M.cache:get(prefix_cache_key..':der_key')
+  return _M.cache:get(host..':dcrt'), _M.cache:get(host..':dkey')
 end
 
+function _M.invalidate_cache(host)
+  _M.cache:delete(host..':dcrt')
+  _M.cache:delete(host..':dkey')
+end
 
 return _M

@@ -28,4 +28,8 @@ function _M.handle(host) -- returns (prefix, err, err_log)
   return prefix, nil, nil
 end
 
+function _M.invalidate_cache(host)
+  _M.cache:delete(host..":pfx")
+end
+
 return _M

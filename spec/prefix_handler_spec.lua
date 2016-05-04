@@ -97,4 +97,16 @@ describe("prefix_handler", function()
       end)
     end)
   end)
+
+  describe(".invalidate_cache", function()
+    it("invalidates prefix cache for given host name", function()
+      cache:set("foo-bar-express.rise.cloud:pfx", "x0y1z2-012")
+      cache:set("foo-bar-express.com:pfx", "a1b2c3-123")
+
+      prefix_handler.invalidate_cache("foo-bar-express.rise.cloud")
+
+      assert.is_nil(cache:get("foo-bar-express.rise.cloud:pfx"))
+      assert.are.equal(cache:get("foo-bar-express.com:pfx"), "a1b2c3-123")
+    end)
+  end)
 end)
