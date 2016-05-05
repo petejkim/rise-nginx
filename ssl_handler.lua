@@ -5,7 +5,7 @@ local config = require('config')
 
 local _M = {
   err_not_found = 'not_found',
-  cache = ngx.shared.rise_ssl
+  cache = ngx.shared.rise
 }
 
 function _M.handle(host) -- returns cert, key, err, err_log
