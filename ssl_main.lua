@@ -1,8 +1,14 @@
 local ssl_handler = require('ssl_handler')
+local config = require('config')
 
 -- Setup TLS related.
 local ssl = require "ngx.ssl"
 local server_name = ssl.server_name()
+
+if string.sub(server_name, -(string.len(config.default_domain))) == config.default_domain then
+  return
+end
+
 local der_crt, der_key, err_log
 local ok, err = ssl.clear_certs()
 
