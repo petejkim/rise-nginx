@@ -123,40 +123,141 @@ describe("handler", function()
             ["x-amz-id-2"] = "8J2guyuubw0qfpLNYmu1d",
             ["x-amz-request-id"] = "5s8sQ96UeDGAk49kHbq93FlWAyeQxnrZSdAXCt"
           }
+        end)
 
-          stub_fn(util, "request_uri_stream", function(httpc, uri, params, res_callback, data_callback)
-            assert.are.equal(httpc, httpc_stub)
-            assert.are.equal(uri, "http://test-s3.example.com/deployments/a1b2c3-123/webroot/404.html")
-            assert.are.same(params, {})
-            res_callback({
-              status = 200,
-              headers = headers
-            })
-            data_callback("<h1>404")
-            data_callback(" Not Found</h1>")
+        context("when 200.html exists (push state support)", function()
+          before_each(function()
+            stub_fn(util, "request_uri_stream", function(httpc, uri, params, res_callback, data_callback)
+              assert.are.equal(httpc, httpc_stub)
+              -- when both 404.html and 200.html exist, prefer 200.html
+              assert.are.equal(
+                uri == "http://test-s3.example.com/deployments/a1b2c3-123/webroot/200.html" or
+                uri == "http://test-s3.example.com/deployments/a1b2c3-123/webroot/404.html"
+              , true)
+              assert.are.same(params, {})
+              res_callback({
+                status = 200,
+                headers = headers
+              })
+              if string.sub(uri, -9) == "/200.html" then
+                data_callback("<h1>200")
+                data_callback(" OK</h1>")
+              end
+              if string.sub(uri, -9) == "/404.html" then
+                data_callback("<h1>404")
+                data_callback(" Not Found</h1>")
+              end
+            end)
+          end)
+
+          after_each(function()
+            unstub_fn(util, "request_uri_stream")
+          end)
+
+          it("returns /200.html page with status 200 ok", function()
+            local tgt, err, err_log = handler.handle("a1b2c3-123", "/")
+
+            assert.is_nil(tgt)
+            assert.is_nil(err)
+            assert.is_nil(err_log)
+
+            assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
+
+            assert.is_nil(cache:get("a1b2c3-123:/:tgt"))
+            assert.is_nil(cache:get("a1b2c3-123:/:rdr"))
+
+            assert.are.same(fngx.print_calls, { "<h1>200", " OK</h1>" })
+            assert.are.equal(fngx.status, 200)
+            assert.are.same(fngx.header, headers)
+            assert.are.same(fngx.exit_calls, { 200 })
           end)
         end)
 
-        after_each(function()
-          unstub_fn(util, "request_uri_stream")
+        context("when 404.html exists (custom 404 page)", function()
+          before_each(function()
+            stub_fn(util, "request_uri_stream", function(httpc, uri, params, res_callback, data_callback)
+              assert.are.equal(
+                uri == "http://test-s3.example.com/deployments/a1b2c3-123/webroot/200.html" or
+                uri == "http://test-s3.example.com/deployments/a1b2c3-123/webroot/404.html"
+              , true)
+              assert.are.same(params, {})
+              if string.sub(uri, -9) == "/200.html" then
+                res_callback({
+                  status = 404,
+                  headers = headers
+                })
+              end
+              if string.sub(uri, -9) == "/404.html" then
+                res_callback({
+                  status = 200,
+                  headers = headers
+                })
+                data_callback("<h1>404")
+                data_callback(" Not Found</h1>")
+              end
+            end)
+          end)
+
+          after_each(function()
+            unstub_fn(util, "request_uri_stream")
+          end)
+
+          it("returns /404.html page with status 404 not found", function()
+            local tgt, err, err_log = handler.handle("a1b2c3-123", "/")
+
+            assert.is_nil(tgt)
+            assert.is_nil(err)
+            assert.is_nil(err_log)
+
+            assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
+
+            assert.is_nil(cache:get("a1b2c3-123:/:tgt"))
+            assert.is_nil(cache:get("a1b2c3-123:/:rdr"))
+
+            assert.are.same(fngx.print_calls, { "<h1>404", " Not Found</h1>" })
+            assert.are.equal(fngx.status, 404)
+            assert.are.same(fngx.header, headers)
+            assert.are.same(fngx.exit_calls, { 404 })
+          end)
         end)
 
-        it("returns /404.html page", function()
-          local tgt, err, err_log = handler.handle("a1b2c3-123", "/")
+        context("when neither 200.html nor 404.html exists", function()
+          before_each(function()
+            stub_fn(util, "request_uri_stream", function(httpc, uri, params, res_callback, data_callback)
+              assert.are.equal(
+                uri == "http://test-s3.example.com/deployments/a1b2c3-123/webroot/200.html" or
+                uri == "http://test-s3.example.com/deployments/a1b2c3-123/webroot/404.html"
+              , true)
+              assert.are.same(params, {})
 
-          assert.is_nil(tgt)
-          assert.is_nil(err)
-          assert.is_nil(err_log)
+              res_callback({
+                status = 404,
+                headers = headers
+              })
+            end)
+          end)
 
-          assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
+          after_each(function()
+            unstub_fn(util, "request_uri_stream")
+          end)
 
-          assert.is_nil(cache:get("a1b2c3-123:/:tgt"))
-          assert.is_nil(cache:get("a1b2c3-123:/:rdr"))
+          it("returns status 403 forbidden", function()
+            -- nginx should recognize this 403 response and serve default 404 page with status 404
 
-          assert.are.same(fngx.print_calls, { "<h1>404", " Not Found</h1>" })
-          assert.are.equal(fngx.status, 404)
-          assert.are.same(fngx.header, headers)
-          assert.are.same(fngx.exit_calls, { 404 })
+            local tgt, err, err_log = handler.handle("a1b2c3-123", "/")
+
+            assert.is_nil(tgt)
+            assert.is_nil(err)
+            assert.is_nil(err_log)
+
+            assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
+
+            assert.is_nil(cache:get("a1b2c3-123:/:tgt"))
+            assert.is_nil(cache:get("a1b2c3-123:/:rdr"))
+
+            assert.are.same(fngx.print_calls, {})
+            assert.are.same(fngx.exit_calls, { 403 })
+          end)
         end)
       end)
     end)
