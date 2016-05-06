@@ -8,7 +8,11 @@ if err then
   end
 
   if err == prefix_handler.err_not_found then
-    return ngx.exit(ngx.HTTP_NOT_FOUND)
+    ngx.status = 404
+    ngx.exec(ngx.var.not_found_location)
+    -- Return OK so that we continue processing location block, otherwise we'll
+    -- just return the default Nginx error page.
+    return ngx.exit(ngx.OK)
   else
     ngx.log(ngx.ERR, err)
   end
