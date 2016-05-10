@@ -7,5 +7,6 @@ return {
   s3_valid_period = "300",
   s3_domain = "s3-us-west-2.amazonaws.com",
   aes_key = "_do_not_use_this_aes_key",
-  default_domain = ".risecloud.dev"
+  default_domain = ".risecloud.dev",
+  ssl_port = '8443'
 }
