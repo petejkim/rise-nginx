@@ -21,7 +21,7 @@ if err then
   return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
 
-if force_https then
+if force_https and ngx.var.scheme == "http" then
   local https_url
   if config.ssl_port then
     https_url = "https://"..ngx.var.host..":"..config.ssl_port..ngx.var.request_uri
