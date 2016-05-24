@@ -13,6 +13,12 @@ local _M = {
 }
 
 function _M.handle(prefix, path) -- returns (target, err, err_log)
+  -- strip query string
+  local path, n, err = ngx.re.gsub(path, "[\\?|\\#].*$", "")
+  if err then
+    return nil, _M.internal_server_error, 'could not strip query string or # fragment "'..path..'"'
+  end
+
   local webroot_uri = config.s3_host.."/deployments/"..prefix.."/webroot"
   local target_path_cache_key = prefix..":"..path..":tgt"
   local should_redirect_cache_key = prefix..":"..path..":rdr"

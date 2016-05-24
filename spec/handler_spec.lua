@@ -39,6 +39,44 @@ describe("handler", function()
       http.new:revert()
     end)
 
+    context("when path has query string or # fragment", function()
+      before_each(function()
+        resolve_stub = stub_fn(target, "resolve", function(path, webroot, drop_dot_html)
+          return "/", true, nil
+        end)
+      end)
+
+      after_each(function()
+        unstub_fn(target, "resolve")
+      end)
+
+      it("strips query string", function()
+        local tgt, err, err_log = handler.handle("a1b2c3-123", "/?utm_code=123&ref=ph?abc=asd")
+
+        assert.are.equal(tgt, "/")
+        assert.are.equal(err, handler.err_redirect)
+        assert.is_nil(err_log)
+
+        assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
+
+        assert.are.equal(cache:get("a1b2c3-123:/:tgt"), "/")
+        assert.is_true(cache:get("a1b2c3-123:/:rdr"))
+      end)
+
+      it("strips # fragment", function()
+        local tgt, err, err_log = handler.handle("a1b2c3-123", "/#app/here/there")
+
+        assert.are.equal(tgt, "/")
+        assert.are.equal(err, handler.err_redirect)
+        assert.is_nil(err_log)
+
+        assert.spy(resolve_stub).was_called_with("/", config.s3_host.."/deployments/a1b2c3-123/webroot", true)
+
+        assert.are.equal(cache:get("a1b2c3-123:/:tgt"), "/")
+        assert.is_true(cache:get("a1b2c3-123:/:rdr"))
+      end)
+    end)
+
     context("when a redirection should happen", function()
       before_each(function()
         resolve_stub = stub_fn(target, "resolve", function(path, webroot, drop_dot_html)
