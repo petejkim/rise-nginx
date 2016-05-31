@@ -43,6 +43,8 @@ if meta.basic_auth_username ~= nil and meta.basic_auth_password ~= nil then
     ngx.header.www_authenticate = 'Basic realm=""'
     return ngx.exit(ngx.HTTP_UNAUTHORIZED)
   end
+
+  ngx.req.set_header("Authorization", nil)
 end
 
 ngx.var.rise_prefix = meta.prefix
