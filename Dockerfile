@@ -10,9 +10,9 @@ RUN cd tmp && \
   dpkg -i libssl1.0.0_1.0.2g-1ubuntu4.1_amd64.deb libssl-dev_1.0.2g-1ubuntu4.1_amd64.deb openssl_1.0.2g-1ubuntu4.1_amd64.deb
 
 RUN cd /tmp && \
-  wget https://openresty.org/download/openresty-1.9.7.4.tar.gz && \
-  tar xvzf openresty-1.9.7.4.tar.gz && \
-  cd openresty-1.9.7.4 && \
+  wget https://openresty.org/download/openresty-1.9.15.1.tar.gz && \
+  tar xvzf openresty-1.9.15.1.tar.gz && \
+  cd openresty-1.9.15.1 && \
   ./configure --prefix=/opt/openresty --with-pcre-jit --with-ipv6 -j4 && \
   make -j4 && \
   sudo make install
@@ -21,6 +21,6 @@ RUN cd /tmp && \
   wget http://luarocks.org/releases/luarocks-2.3.0.tar.gz && \
   tar xvzf luarocks-2.3.0.tar.gz && \
   cd luarocks-2.3.0 && \
-  ./configure --prefix=/opt/openresty/luajit --with-lua=/opt/openresty/luajit --lua-suffix=jit-2.1.0-beta1 --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 && \
+  ./configure --prefix=/opt/openresty/luajit --with-lua=/opt/openresty/luajit --lua-suffix=jit-2.1.0-beta2 --with-lua-include=/opt/openresty/luajit/include/luajit-2.1 && \
   make build && \
   sudo make install

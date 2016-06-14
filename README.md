@@ -11,9 +11,9 @@ wget http://mirrors.kernel.org/ubuntu/pool/main/o/openssl/openssl_1.0.2g-1ubuntu
 sudo dpkg -i libssl1.0.0_1.0.2g-1ubuntu4.1_amd64.deb libssl-dev_1.0.2g-1ubuntu4.1_amd64.deb openssl_1.0.2g-1ubuntu4.1_amd64.deb
 
 # Install OpenResty
-wget https://openresty.org/download/openresty-1.9.7.4.tar.gz
-tar xvzf openresty-1.9.7.4.tar.gz
-cd openresty-1.9.7.4
+wget https://openresty.org/download/openresty-1.9.15.1.tar.gz
+tar xvzf openresty-1.9.15.1.tar.gz
+cd openresty-1.9.15.1
 ./configure --prefix=/opt/openresty --with-pcre-jit --with-ipv6 -j4
 make -j4
 sudo make install
@@ -27,6 +27,8 @@ cd luarocks-2.3.0
 make build
 sudo make install
 cd ..
+# Check your openresty version
+resty -V
 
 # Add to PATH and create aliases
 echo 'export PATH="lua_modules/bin:/opt/openresty/luajit/bin:/opt/openresty/nginx/sbin:$PATH"' >> ~/.zshrc
