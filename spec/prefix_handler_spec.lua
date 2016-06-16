@@ -33,22 +33,26 @@ describe("prefix_handler", function()
       http.new:revert()
     end)
 
-    context("prefix and force_https are not cached", function()
-      context("when domain.get_meta returns a prefix and force_https", function()
+    context("meta is not not cached", function()
+      context("when domain.get_meta returns meta data", function()
         before_each(function()
           get_meta_stub = stub_fn(domain, "get_meta", function(host)
             return {
               prefix = "a1b2c3-123",
-              force_https = true
+              force_https = true,
+              basic_auth_username = "username",
+              basic_auth_password = "$2a$10$AIsgi0wWxZRI1Ep6DsQhS.pK8uh9I6ijsvwRZtFRtLo2.Y9JASC92"
             }, nil
           end)
         end)
 
-        it("fetches meta.json to obtain prefix and force_https and caches prefix and force_https", function()
-          local pfx, fh, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
+        it("fetches meta.json to obtain meta and caches meta", function()
+          local meta, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
 
-          assert.are.equal(pfx, "a1b2c3-123")
-          assert.is_true(fh)
+          assert.are.equal(meta.prefix, "a1b2c3-123")
+          assert.is_true(meta.force_https)
+          assert.are.equal(meta.basic_auth_username, "username")
+          assert.are.equal(meta.basic_auth_password, "$2a$10$AIsgi0wWxZRI1Ep6DsQhS.pK8uh9I6ijsvwRZtFRtLo2.Y9JASC92")
           assert.is_nil(err)
           assert.is_nil(err_log)
 
@@ -56,6 +60,8 @@ describe("prefix_handler", function()
 
           assert.are.equal(cache:get("foo-bar-express.rise.cloud:pfx"), "a1b2c3-123")
           assert.are.equal(cache:get("foo-bar-express.rise.cloud:fh"), true)
+          assert.are.equal(cache:get("foo-bar-express.rise.cloud:bau"), "username")
+          assert.are.equal(cache:get("foo-bar-express.rise.cloud:bap"), "$2a$10$AIsgi0wWxZRI1Ep6DsQhS.pK8uh9I6ijsvwRZtFRtLo2.Y9JASC92")
         end)
       end)
 
@@ -69,10 +75,12 @@ describe("prefix_handler", function()
         end)
 
         it("fetches meta.json to obtain prefix and force_https and caches prefix and force_https", function()
-          local pfx, fh, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
+          local meta, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
 
-          assert.are.equal(pfx, "a1b2c3-123")
-          assert.is_false(fh)
+          assert.are.equal(meta.prefix, "a1b2c3-123")
+          assert.is_false(meta.force_https)
+          assert.is_nil(meta.basic_auth_username)
+          assert.is_nil(meta.basic_auth_password)
           assert.is_nil(err)
           assert.is_nil(err_log)
 
@@ -80,6 +88,8 @@ describe("prefix_handler", function()
 
           assert.are.equal(cache:get("foo-bar-express.rise.cloud:pfx"), "a1b2c3-123")
           assert.are.equal(cache:get("foo-bar-express.rise.cloud:fh"), false)
+          assert.is_nil(cache:get("foo-bar-express.rise.cloud:bau"))
+          assert.is_nil(cache:get("foo-bar-express.rise.cloud:bap"))
         end)
       end)
 
@@ -91,10 +101,9 @@ describe("prefix_handler", function()
         end)
 
         it("returns an error", function()
-          local pfx, fh, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
+          local meta, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
 
-          assert.are.equal(pfx, nil)
-          assert.is_nil(fh)
+          assert.is_nil(meta, nil)
           assert.are.equal(err, prefix_handler.err_not_found)
           assert.are.equal(err_log, 'Failed to fetch metadata for "foo-bar-express.rise.cloud" due to "'..domain.err_not_found..'"')
 
@@ -102,6 +111,8 @@ describe("prefix_handler", function()
 
           assert.is_nil(cache:get("foo-bar-express.rise.cloud:pfx"))
           assert.is_nil(cache:get("foo-bar-express.rise.cloud:fh"))
+          assert.is_nil(cache:get("foo-bar-express.rise.cloud:bau"))
+          assert.is_nil(cache:get("foo-bar-express.rise.cloud:bap"))
         end)
       end)
     end)
@@ -122,10 +133,10 @@ describe("prefix_handler", function()
         end)
 
         it("fetches meta.json to obtain prefix and force_https and caches prefix and force_https", function()
-          local pfx, fh, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
+          local meta, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/")
 
-          assert.are.equal(pfx, "a1b2c3-123")
-          assert.is_true(fh)
+          assert.are.equal(meta.prefix, "a1b2c3-123")
+          assert.is_true(meta.force_https)
           assert.is_nil(err)
           assert.is_nil(err_log)
 
@@ -133,23 +144,28 @@ describe("prefix_handler", function()
 
           assert.are.equal(cache:get("foo-bar-express.rise.cloud:pfx"), "a1b2c3-123")
           assert.are.equal(cache:get("foo-bar-express.rise.cloud:fh"), true)
+          assert.is_nil(cache:get("foo-bar-express.rise.cloud:bau"))
+          assert.is_nil(cache:get("foo-bar-express.rise.cloud:bap"))
         end)
       end)
     end)
 
-
-    context("prefix and force_https are cached", function()
+    context("meta data is cached", function()
       before_each(function()
         get_meta_stub = stub_fn(domain, "get_meta")
         cache:set("foo-bar-express.rise.cloud:pfx", "x0y1z2-012")
         cache:set("foo-bar-express.rise.cloud:fh", true)
+        cache:set("foo-bar-express.rise.cloud:bau", "foo-bar")
+        cache:set("foo-bar-express.rise.cloud:bap", "baz-qux")
       end)
 
       it("fetches prefix from cache", function()
-        local pfx, fh, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/foo")
+        local meta, err, err_log = prefix_handler.handle("foo-bar-express.rise.cloud", "/foo")
 
-        assert.are.equal(pfx, "x0y1z2-012")
-        assert.is_true(fh)
+        assert.are.equal(meta.prefix, "x0y1z2-012")
+        assert.is_true(meta.force_https)
+        assert.are.equal(meta.basic_auth_username, "foo-bar")
+        assert.are.equal(meta.basic_auth_password, "baz-qux")
         assert.is_nil(err)
         assert.is_nil(err_log)
 
@@ -157,6 +173,8 @@ describe("prefix_handler", function()
 
         assert.are.equal(cache:get("foo-bar-express.rise.cloud:pfx"), "x0y1z2-012")
         assert.is_true(cache:get("foo-bar-express.rise.cloud:fh"))
+        assert.are.equal(cache:get("foo-bar-express.rise.cloud:bau"), "foo-bar")
+        assert.are.equal(cache:get("foo-bar-express.rise.cloud:bap"), "baz-qux")
       end)
     end)
   end)
@@ -165,15 +183,25 @@ describe("prefix_handler", function()
     it("invalidates prefix cache for given host name", function()
       cache:set("foo-bar-express.rise.cloud:pfx", "x0y1z2-012")
       cache:set("foo-bar-express.rise.cloud:fh", true)
+      cache:set("foo-bar-express.rise.cloud:bau", "foo-bar")
+      cache:set("foo-bar-express.rise.cloud:bap", "baz-qux")
+
       cache:set("foo-bar-express.com:pfx", "a1b2c3-123")
       cache:set("foo-bar-express.com:fh", true)
+      cache:set("foo-bar-express.com:bau", "user1010")
+      cache:set("foo-bar-express.com:bap", "pass0101")
 
       prefix_handler.invalidate_cache("foo-bar-express.rise.cloud")
 
       assert.is_nil(cache:get("foo-bar-express.rise.cloud:pfx"))
       assert.is_nil(cache:get("foo-bar-express.rise.cloud:fh"))
+      assert.is_nil(cache:get("foo-bar-express.rise.cloud:bau"))
+      assert.is_nil(cache:get("foo-bar-express.rise.cloud:bap"))
+
       assert.are.equal(cache:get("foo-bar-express.com:pfx"), "a1b2c3-123")
       assert.is_true(cache:get("foo-bar-express.com:fh"))
+      assert.are.equal(cache:get("foo-bar-express.com:bau"), "user1010")
+      assert.are.equal(cache:get("foo-bar-express.com:bap"), "pass0101")
     end)
   end)
 end)
